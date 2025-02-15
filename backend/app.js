@@ -5,10 +5,10 @@ const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
 const connectToDb = require('./db/db');
-// const userRoutes = require('./routes/userRoute');
-// const adminRoutes = require('./routes/adminRoute');
-// const taskRoutes = require('./routes/taskRoutes');
-
+const adminRoutes = require('./routes/adminRoutes');
+// const studentRoutes = require('./routes/studentRoutes');
+// const teacherRoutes = require('./routes/teacherRoutes');
+// const paperRoutes = require('./routes/paperRoutes');
 
 connectToDb();
 
@@ -20,15 +20,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
-
 app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
 app.use('/admin', adminRoutes);
-app.use('/teacher', teacherRoutes);
-app.use('/student', studentRoutes);
-app.use('/paper', paperRoutes);
+// app.use('/teacher', teacherRoutes);
+// app.use('/student', studentRoutes);
+// app.use('/paper', paperRoutes);
 
 module.exports = app;

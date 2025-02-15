@@ -23,6 +23,19 @@ const teacherSchema = new mongoose.Schema({
     }],
 }, { timestamps: true });
 
+teacherSchema.methods.generateAuthToken = function () {
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    return token;
+  }
+  
+  teacherSchema.methods.comparePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
+  }
+  
+  teacherSchema.statics.hashPassword = async function (password) {
+    return await bcrypt.hash(password, 10);
+  }
+
 const Teacher = mongoose.model('Teacher', teacherSchema);
 
 module.exports = Teacher;

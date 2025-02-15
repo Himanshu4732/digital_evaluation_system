@@ -1,6 +1,2 @@
 .env
-db
-middlewares
 node_modules
-routes
-services
