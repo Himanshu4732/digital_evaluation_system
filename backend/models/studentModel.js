@@ -1,4 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const studentSchema = new mongoose.Schema({
     name: {
@@ -21,16 +23,13 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    class: {
+    section: {
         type: String,
         required: true
     },
     semester: {
         type: String,
         required: true
-    },
-    marks: {
-        type: Number
     },
     papers: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -43,16 +42,16 @@ const studentSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-student.methods.generateAuthToken = function () {
+studentSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
     return token;
   }
   
-  student.methods.comparePassword = async function (password) {
+  studentSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
   }
   
-  student.statics.hashPassword = async function (password) {
+  studentSchema.statics.hashPassword = async function (password) {
     return await bcrypt.hash(password, 10);
   }
 
