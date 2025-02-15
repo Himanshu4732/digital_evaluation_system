@@ -23,19 +23,28 @@ const paperSchema = new mongoose.Schema({
         ref: 'Teacher'
     },
     total_marks: {
-        type: Number
+        type: Number ,
+        required: true
     },
     obtained_marks: {
         type: Number
     },
-    feedback: {
-        type: String
+    elavuation_date: {
+        type: Date
+    },
+        feedback: {
+        type:this.mongoose.Schema.Types.ObjectId,
+        ref: 'Feedback'
     },
     status: {
         type: String,
         enum: ['Assigned', "Pending" , 'Evaluated'],
         default: 'Assigned'
     },
+    answerSheet: {
+        type: String,
+        required: true
+    }
     
 }, { timestamps: true });
 

@@ -14,10 +14,13 @@ const teacherSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    avatar: {
+        type: String
+    },
     assignedPapers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Paper'
-    }]
+    }],
 }, { timestamps: true });
 
 const Teacher = mongoose.model('Teacher', teacherSchema);

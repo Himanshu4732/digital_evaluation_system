@@ -31,7 +31,16 @@ const studentSchema = new mongoose.Schema({
     },
     marks: {
         type: Number
-    }
+    },
+    papers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Paper'
+    }],
+    feedbacks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Feedback'
+    }],
+    
 }, { timestamps: true });
 
 const Student = mongoose.model('Student', studentSchema);
