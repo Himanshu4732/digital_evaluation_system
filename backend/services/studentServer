@@ -1,19 +1,8 @@
-const studentModel = require('../models/studentModel');
+const studentModel = require("../models/studentModel");
 
-module.exports.createStudent = async ({
-    name, email, password , roll_no, section, semester
-}) => {
-    if (!name || !email || !password || !roll_no || !section || !semester) {
-        throw new Error('All fields are required');
-    }
-    const student = studentModel.create({
-        name,
-        email,
-        password,
-        roll_no,
-        section,
-        semester
-    });
-
+module.exports.createStudent = async (studentData) => {
+    
+    const student = new studentModel(studentData);
+    await student.save();
     return student;
-}
+};

@@ -23,8 +23,8 @@ router.post(
             .notEmpty()
             .withMessage("section is required"),
         body("semester")
-            .notEmpty()
-            .withMessage("Semester is required"),
+            .notEmpty().isNumeric()
+            .withMessage("Enter a valid semester"),
     ],
     studentController.registerStudent
 );

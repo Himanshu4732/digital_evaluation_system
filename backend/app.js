@@ -8,7 +8,7 @@ const connectToDb = require('./db/db');
 const adminRoutes = require('./routes/adminRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
-// const paperRoutes = require('./routes/paperRoutes');
+const paperRoutes = require('./routes/paperRoutes');
 
 connectToDb();
 
@@ -27,6 +27,6 @@ app.get('/', (req, res) => {
 app.use('/admin', adminRoutes);
 app.use('/teacher', teacherRoutes);
 app.use('/student', studentRoutes);
-// app.use('/paper', paperRoutes);
+app.use('/paper', paperRoutes);
 
 module.exports = app;

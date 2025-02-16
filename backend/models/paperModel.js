@@ -5,10 +5,6 @@ const paperSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    course_code: {
-        type: String,
-        required: true
-    },
     date_of_exam: {
         type: Date,
         required: true
@@ -33,7 +29,7 @@ const paperSchema = new mongoose.Schema({
         type: Date
     },
         feedback: {
-        type:this.mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Feedback'
     },
     status: {
