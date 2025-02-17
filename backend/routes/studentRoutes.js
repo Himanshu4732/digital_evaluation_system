@@ -3,11 +3,16 @@ const { body } = require("express-validator");
 const studentController = require("../controllers/studentController");
 const authMiddleware = require("../middlewares/authMiddleware");
 const Student = require("../models/studentModel");
+// import { upload } from "../middlewares/multerMiddleware"
+const {upload} = require("../middlewares/multerMiddleware")
 
 const router = express.Router();
 
 router.post(
     "/register",
+    upload.fields([
+        { name: "avatar", maxCount: 1 }
+      ]),
     [
         body("email").isEmail().withMessage("Invalid Email"),
         body("name")

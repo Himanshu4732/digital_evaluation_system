@@ -1,6 +1,7 @@
 const studentModel = require("../models/studentModel");
 const studentServer = require("../services/studentServer");
 const { validationResult } = require("express-validator");
+const { uploadOnCloudinary } = require("../utils/cloudinaryUtils")
 
 module.exports.registerStudent = async (req, res, next) => {
     const errors = validationResult(req);
@@ -16,6 +17,14 @@ module.exports.registerStudent = async (req, res, next) => {
         return res.status(400).json({ message: "Student already exists" });
     }
 
+    const { avatar } = req.files;
+
+  // Upload avatar and cover image to Cloudinary
+  const avatarUploadResponse = await uploadOnCloudinary(avatar[0].path);
+
+  // Now you have the URLs for the uploaded files:
+  const avatarUrl = avatarUploadResponse.url;
+
     const hashedPassword = await studentModel.hashPassword(password);
 
     const student = await studentServer.createStudent({
@@ -29,7 +38,7 @@ module.exports.registerStudent = async (req, res, next) => {
 
     const token = student.generateAuthToken();
 
-    res.status(201).json({ token, student });
+    res.status(201).json({ token, student , avatarUrl});
 };
 
 module.exports.loginStudent = async (req, res, next) => {
