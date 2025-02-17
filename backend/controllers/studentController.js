@@ -20,9 +20,9 @@ module.exports.registerStudent = async (req, res, next) => {
     const { avatar } = req.files;
 
   // Upload avatar and cover image to Cloudinary
+  console.log(avatar)
   const avatarUploadResponse = await uploadOnCloudinary(avatar[0].path);
 
-  // Now you have the URLs for the uploaded files:
   const avatarUrl = avatarUploadResponse.url;
 
     const hashedPassword = await studentModel.hashPassword(password);
@@ -31,6 +31,7 @@ module.exports.registerStudent = async (req, res, next) => {
         name,
         email,
         section,
+        avatar:avatarUrl,
         roll_no,
         semester,
         password: hashedPassword,
