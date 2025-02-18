@@ -1,6 +1,5 @@
-const multer = require("multer")
-const path = require("path"); 
-
+const multer = require("multer");
+const path = require("path");
 
 // Update the path to resolve the correct absolute directory
 const storage = multer.diskStorage({
@@ -15,4 +14,4 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-module.exports = {upload}
+module.exports = { upload };

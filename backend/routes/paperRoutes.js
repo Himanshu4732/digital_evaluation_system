@@ -3,9 +3,13 @@ const router = express.Router();
 const { body } = require("express-validator");
 const paperController = require("../controllers/paperController");
 const auth = require("../middlewares/authMiddleware");
+const { upload } = require("../middlewares/multerMiddleware");
 
 router.post(
   "/create",
+  upload.fields([
+    { name: "answerSheet", maxCount: 1 }
+  ]),
   [
     auth.authAdmin,
     body("subject").notEmpty().withMessage("subject is required"),
@@ -17,7 +21,6 @@ router.post(
       .notEmpty()
       .isNumeric()
       .withMessage("valid number is required"),
-    body("answerSheet").notEmpty().withMessage("answerSheet is required"),
     body("studentEmail").notEmpty().withMessage("student is required"),
   ],
   paperController.createPaper
@@ -45,8 +48,5 @@ router.get("/student", auth.authStudent, paperController.getStudentPapers);
 
 //getting all papers of a teacher
 router.get("/teacher", auth.authTeacher, paperController.getTeacherPapers);
-
-
-
 
 module.exports = router;

@@ -3,8 +3,7 @@ const { body } = require("express-validator");
 const studentController = require("../controllers/studentController");
 const authMiddleware = require("../middlewares/authMiddleware");
 const Student = require("../models/studentModel");
-// import { upload } from "../middlewares/multerMiddleware"
-const {upload} = require("../middlewares/multerMiddleware")
+const { upload } = require("../middlewares/multerMiddleware");
 
 const router = express.Router();
 
@@ -28,8 +27,8 @@ router.post(
             .notEmpty()
             .withMessage("section is required"),
         body("semester")
-            .notEmpty().isNumeric()
-            .withMessage("Enter a valid semester"),
+            .isNumeric()
+            .withMessage("Semester should be a number"),
     ],
     studentController.registerStudent
 );
