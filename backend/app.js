@@ -8,9 +8,9 @@ const connectToDb = require('./db/db');
 const adminRoutes = require('./routes/adminRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
-const paperRoutes = require('./routes/paperRoutes');
+const answerpaperRoutes = require('./routes/answerpaperRoutes');
 const questionPaperRoutes = require('./routes/questionPaperRoutes')
-// const marksRoutes = require('./routes/marksRoutes')
+const marksRoutes = require('./routes/marksRoutes')
 
 connectToDb();
 
@@ -29,8 +29,8 @@ app.get('/', (req, res) => {
 app.use('/admin', adminRoutes);
 app.use('/teacher', teacherRoutes);
 app.use('/student', studentRoutes);
-app.use('/paper', paperRoutes);
+app.use('/answerpaper', answerpaperRoutes);
 app.use('/questionPaper',questionPaperRoutes);
-// app.use('/marks',marksRoutes);
+app.use('/marks',marksRoutes);
 
 module.exports = app;

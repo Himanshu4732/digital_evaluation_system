@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
-const paperController = require("../controllers/paperController");
+const answerpaperController = require("../controllers/answerpaperController");
 const auth = require("../middlewares/authMiddleware");
 const { upload } = require("../middlewares/multerMiddleware");
 
@@ -22,30 +22,30 @@ router.post(
       .withMessage("valid number is required"),
     body("studentEmail").notEmpty().withMessage("student is required"),
   ],
-  paperController.createPaper
+  answerpaperController.createanswerPaper
 );
 
-// assigning paper to teacher for checking
+// assigning answerpaper to teacher for checking
 router.patch(
-  "/assign/:paperId",
+  "/assign/:answerpaperId",
   [auth.authAdmin, body("teacherEmail").notEmpty().withMessage("teacher is required")],
-  paperController.assignPaper
+  answerpaperController.assignanswerPaper
 );
 
-//checking paper and giving marks
+//checking answerpaper and giving marks
 router.patch(
-  "/check/:paperId",
+  "/check/:answerpaperId",
   [
     auth.authTeacher,
     body("marks").notEmpty().withMessage("marks is required"),
   ],
-  paperController.checkPaper
+  answerpaperController.checkanswerPaper
 );
 
-//getting all papers of a student
-router.get("/student", auth.authStudent, paperController.getStudentPapers);
+//getting all answerpapers of a student
+router.get("/student", auth.authStudent, answerpaperController.getStudentanswerPapers);
 
-//getting all papers of a teacher
-router.get("/teacher", auth.authTeacher, paperController.getTeacherPapers);
+//getting all answerpapers of a teacher
+router.get("/teacher", auth.authTeacher, answerpaperController.getTeacheranswerPapers);
 
 module.exports = router;

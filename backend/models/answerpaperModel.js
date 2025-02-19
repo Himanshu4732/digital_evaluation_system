@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const paperSchema = new mongoose.Schema({
+const answerpaperSchema = new mongoose.Schema({
     subject: {
         type: String,
         required: true
@@ -44,6 +44,6 @@ const paperSchema = new mongoose.Schema({
     
 }, { timestamps: true });
 
-const Paper = mongoose.model('Paper', paperSchema);
+const AnswerPaper = mongoose.model('AnswerPaper', answerpaperSchema);
 
-module.exports = Paper;
+module.exports = AnswerPaper;

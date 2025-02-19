@@ -1,9 +1,9 @@
-const paperModel = require("../models/paperModel");
+const answerpaperModel = require("../models/answerpaperModel");
 const { validationResult } = require("express-validator");
 const studentModel = require("../models/studentModel");
 const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
 
-exports.createPaper = async (req, res) => {
+exports.createanswerPaper = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -28,7 +28,7 @@ exports.createPaper = async (req, res) => {
 
     const answerSheetUrl = answerUploadResponse.url;
 
-    const newPaper = new paperModel({
+    const newPaper = new answerpaperModel({
       subject,
       date_of_exam,
       student: studentDetail._id,
@@ -45,7 +45,7 @@ exports.createPaper = async (req, res) => {
   }
 };
 
-exports.assignPaper = async (req, res) => {
+exports.assignanswerPaper = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -55,7 +55,7 @@ exports.assignPaper = async (req, res) => {
   const { paperId } = req.params;
 
   try {
-    const paper = await paperModel.findById(paperId);
+    const paper = await answerpaperModel.findById(paperId);
     if (!paper) {
       return res.status(404).json({ message: "Paper not found" });
     }
@@ -69,7 +69,7 @@ exports.assignPaper = async (req, res) => {
   }
 };
 
-exports.checkPaper = async (req, res) => {
+exports.checkanswerPaper = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -79,7 +79,7 @@ exports.checkPaper = async (req, res) => {
   const { paperId } = req.params;
 
   try {
-    const paper = await paperModel.findById(paperId);
+    const paper = await answerpaperModel.findById(paperId);
     if (!paper) {
       return res.status(404).json({ message: "Paper not found" });
     }
@@ -93,18 +93,18 @@ exports.checkPaper = async (req, res) => {
   }
 };
 
-exports.getStudentPapers = async (req, res) => {
+exports.getStudentanswerPapers = async (req, res) => {
   try {
-    const studentPapers = await paperModel.find({ student: req.user.id });
+    const studentPapers = await answerpaperModel.find({ student: req.user.id });
     res.status(200).json({ papers: studentPapers });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-exports.getTeacherPapers = async (req, res) => {
+exports.getTeacheranswerPapers = async (req, res) => {
   try {
-    const teacherPapers = await paperModel.find({ teacherEmail: req.user.email });
+    const teacherPapers = await answerpaperModel.find({ teacherEmail: req.user.email });
     res.status(200).json({ papers: teacherPapers });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
