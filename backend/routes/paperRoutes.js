@@ -7,9 +7,8 @@ const { upload } = require("../middlewares/multerMiddleware");
 
 router.post(
   "/create",
-  upload.fields([
-    { name: "answerSheet", maxCount: 1 }
-  ]),
+  upload.single("answerSheet")
+  ,
   [
     auth.authAdmin,
     body("subject").notEmpty().withMessage("subject is required"),
@@ -38,7 +37,7 @@ router.patch(
   "/check/:paperId",
   [
     auth.authTeacher,
-    body("marks").notEmpty().isNumeric().withMessage("marks is required"),
+    body("marks").notEmpty().withMessage("marks is required"),
   ],
   paperController.checkPaper
 );
