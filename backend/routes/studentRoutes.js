@@ -2,7 +2,6 @@ const express = require("express");
 const { body } = require("express-validator");
 const studentController = require("../controllers/studentController");
 const authMiddleware = require("../middlewares/authMiddleware");
-const Student = require("../models/studentModel");
 const { upload } = require("../middlewares/multerMiddleware");
 
 const router = express.Router();

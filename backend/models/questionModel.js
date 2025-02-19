@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const questionSchema = new Schema({
+    questionNumber:{
+        type:Number,
+        required:true
+    },
     questionText: {
         type: String,
         required: true
@@ -11,9 +15,9 @@ const questionSchema = new Schema({
         type: Number,
         required: true
     },
-    paperId: {
+    QuestionpaperId: {
         type: Schema.Types.ObjectId,
-        ref: 'Paper',
+        ref: 'QuestionPaper',
         required: true
     }
 });
