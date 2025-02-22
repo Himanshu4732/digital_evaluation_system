@@ -25,7 +25,7 @@ router.post(
 );
 
 // assigning answerpaper to teacher for checking
-router.patch(
+router.post(
   "/assign/:answerpaperId",
   [auth.authAdmin, body("teacherEmail").notEmpty().withMessage("teacher is required")],
   answerpaperController.assignanswerPaper

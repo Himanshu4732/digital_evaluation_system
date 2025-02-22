@@ -86,6 +86,12 @@ module.exports.getDashboard = async (req, res, next) => {
         'Pending': 0,
         'Evaluated': 0
     };
+
+    const feedbackMessages = await feedbackModel.find();
+    const feedbackMessagesStatus = {
+        'Pending': 0,
+        'Resolved': 0
+    };
     
     answerPapers.forEach(answerPaper => {
         answerPapersStatus[answerPaper.status]++;
@@ -97,7 +103,8 @@ module.exports.getDashboard = async (req, res, next) => {
         totalAnswerPapers,
         totalQuestionPapers,
         totalFeedbacks,
-        answerPapersStatus
+        answerPapersStatus,
+        feedbackMessagesStatus
     });
 
 }

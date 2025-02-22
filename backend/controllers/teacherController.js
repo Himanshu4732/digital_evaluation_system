@@ -75,3 +75,12 @@ module.exports.getTeacherProfile = async (req, res, next) => {
 
     res.status(200).json(req.teacher);
 }
+
+module.exports.assignedPaper = async (req, res, next) => {
+    
+    const teacher = req.teacher;
+
+    const papers = teacher.assignedPaper;
+
+    res.status(200).json(papers);
+}

@@ -1,6 +1,7 @@
 const answerpaperModel = require("../models/answerpaperModel");
 const { validationResult } = require("express-validator");
 const studentModel = require("../models/studentModel");
+const teacherModel = require("../models/teacherModel");
 const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
 
 exports.createanswerPaper = async (req, res) => {
@@ -17,7 +18,8 @@ exports.createanswerPaper = async (req, res) => {
     if (!studentDetail) {
       return res.status(404).json({ message: "Student not found" });
     }
-    const pdf = req.file
+
+    const pdf = req.file;
 
     if (!pdf) {
       return res.status(400).json({ message: "PDF file is required" });
@@ -51,16 +53,28 @@ exports.assignanswerPaper = async (req, res) => {
   }
 
   const { teacherEmail } = req.body;
-  const { paperId } = req.params;
+  const answerpaperId = req.params.answerpaperId;
 
   try {
-    const paper = await answerpaperModel.findById(paperId);
+    const paper = await answerpaperModel.findById(answerpaperId);
+
     if (!paper) {
       return res.status(404).json({ message: "Paper not found" });
     }
 
-    paper.teacherEmail = teacherEmail;
+    const teacher = await teacherModel.findOne({ email: teacherEmail });
+
+    if (!teacher) {
+      return res.status(404).json({ message: "Teacher not found" });
+    }
+
+    paper.teacher = teacher._id;
     await paper.save();
+
+    if (!teacher.assignedPapers.includes(paper._id)) {
+      teacher.assignedPapers.push(paper._id);
+      await teacher.save();
+    }
 
     res.status(200).json({ message: "Paper assigned successfully", paper });
   } catch (error) {
@@ -103,7 +117,7 @@ exports.getStudentanswerPapers = async (req, res) => {
 
 exports.getTeacheranswerPapers = async (req, res) => {
   try {
-    const teacherPapers = await answerpaperModel.find({ teacherEmail: req.user.email });
+    const teacherPapers = await answerpaperModel.find({ teacher: req.user._id });
     res.status(200).json({ papers: teacherPapers });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

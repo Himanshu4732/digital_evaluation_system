@@ -35,4 +35,7 @@ router.post(
 
 router.get('/profile', authMiddleware.authTeacher, teacherController.getTeacherProfile);
 
+//dashboard
+router.get('/assignedPaper', authMiddleware.authTeacher, teacherController.assignedPaper);
+
 module.exports = router;

@@ -37,5 +37,4 @@ router.get('/dashboard', authMiddleware.authAdmin, adminController.getDashboard)
 
 
 
-
 module.exports = router;
