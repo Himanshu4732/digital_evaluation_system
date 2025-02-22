@@ -31,4 +31,11 @@ router.post(
 
 router.get('/profile', authMiddleware.authAdmin, adminController.getAdminProfile);
 
+//admin dashboard
+router.get('/dashboard', authMiddleware.authAdmin, adminController.getDashboard);
+
+
+
+
+
 module.exports = router;

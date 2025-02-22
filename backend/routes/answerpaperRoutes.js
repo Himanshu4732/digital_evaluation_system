@@ -7,8 +7,7 @@ const { upload } = require("../middlewares/multerMiddleware");
 
 router.post(
   "/create",
-  upload.single("answerSheet")
-  ,
+  upload.single("answerSheet"),
   [
     auth.authAdmin,
     body("subject").notEmpty().withMessage("subject is required"),
@@ -32,7 +31,7 @@ router.patch(
   answerpaperController.assignanswerPaper
 );
 
-//checking answerpaper and giving marks
+// checking answerpaper and giving marks
 router.patch(
   "/check/:answerpaperId",
   [
@@ -42,10 +41,10 @@ router.patch(
   answerpaperController.checkanswerPaper
 );
 
-//getting all answerpapers of a student
+// getting all answerpapers of a student
 router.get("/student", auth.authStudent, answerpaperController.getStudentanswerPapers);
 
-//getting all answerpapers of a teacher
+// getting all answerpapers of a teacher
 router.get("/teacher", auth.authTeacher, answerpaperController.getTeacheranswerPapers);
 
 module.exports = router;

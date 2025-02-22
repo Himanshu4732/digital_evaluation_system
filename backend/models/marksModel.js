@@ -1,19 +1,10 @@
 const mongoose = require('mongoose');
 
 const marksSchema = new mongoose.Schema({
-    studentId: {
+
+    answerPaper: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Student',
-        required: true
-    },
-    paperId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Paper',
-        required: true
-    },
-    teacherId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Teacher',
+        ref: 'AnswerPaper',
         required: true
     },
     questionId: {

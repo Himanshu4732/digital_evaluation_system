@@ -1,4 +1,9 @@
 const adminModel = require('../models/adminModel');
+const teacherModel = require('../models/teacherModel');
+const studentModel = require('../models/studentModel');
+const answerPaperModel = require('../models/answerpaperModel');
+const questionPaperModel = require('../models/questionPaperModel');
+const feedbackModel = require('../models/feedbackModel');
 const adminServer = require('../services/adminServer');
 const { validationResult } = require('express-validator');
 
@@ -63,5 +68,36 @@ module.exports.loginAdmin = async (req, res, next) => {
 module.exports.getAdminProfile = async (req, res, next) => {
 
     res.status(200).json(req.admin);
+
+}
+
+module.exports.getDashboard = async (req, res, next) => {
+    
+    const totalTeachers = await teacherModel.countDocuments();
+    const totalStudents = await studentModel.countDocuments();
+    const totalAnswerPapers = await answerPaperModel.countDocuments();
+    const totalQuestionPapers = await questionPaperModel.countDocuments();
+    const totalFeedbacks = await feedbackModel.countDocuments();
+
+    //data to answerpapers status 
+    const answerPapers = await answerPaperModel.find();
+    const answerPapersStatus = {
+        'Assigned': 0,
+        'Pending': 0,
+        'Evaluated': 0
+    };
+    
+    answerPapers.forEach(answerPaper => {
+        answerPapersStatus[answerPaper.status]++;
+    });
+
+    res.status(200).json({
+        totalTeachers,
+        totalStudents,
+        totalAnswerPapers,
+        totalQuestionPapers,
+        totalFeedbacks,
+        answerPapersStatus
+    });
 
 }

@@ -1,6 +1,7 @@
 const teacherModel = require('../models/teacherModel');
 const teacherServer = require('../services/teacherServer');
 const { validationResult } = require('express-validator');
+const { uploadOnCloudinary } = require('../utils/cloudinaryUtils');
 
 module.exports.registerTeacher = async (req, res, next) => {
 
@@ -17,11 +18,23 @@ module.exports.registerTeacher = async (req, res, next) => {
         return res.status(400).json({ message: 'Teacher already exists' });
     }
 
+    const avatar = req.files?.avatar?.[0];
+
+    let avatarUrl = null;
+
+    if (avatar) {
+      // Upload avatar to Cloudinary
+      const avatarUploadResponse = await uploadOnCloudinary(avatar.path, "avatar", avatar.mimetype);
+      console.log(avatarUploadResponse);
+      avatarUrl = avatarUploadResponse.url;
+    }
+
     const hashedPassword = await teacherModel.hashPassword(password);
 
     const teacher = await teacherServer.createTeacher({
         name,
         email,
+        avatar: avatarUrl,
         password: hashedPassword
     });
 

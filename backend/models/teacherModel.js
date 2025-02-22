@@ -21,7 +21,7 @@ const teacherSchema = new mongoose.Schema({
     },
     assignedPapers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Paper'
+        ref: 'AnswerPaper'
     }],
 }, { timestamps: true });
 

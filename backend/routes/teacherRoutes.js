@@ -3,9 +3,13 @@ const router = express.Router();
 const { body } = require("express-validator");
 const teacherController = require("../controllers/teacherController");
 const authMiddleware = require("../middlewares/authMiddleware");
+const { upload } = require("../middlewares/multerMiddleware");
 
 router.post(
   "/register",
+  upload.fields([
+    { name: "avatar", maxCount: 1 }
+  ]),
   [
     body("email").isEmail().withMessage("Invalid Email"),
     body("name")

@@ -31,9 +31,9 @@ const studentSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    papers: [{
+    answerpapers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Paper'
+        ref: 'AnswerPaper'
     }],
     feedbacks: [{
         type: mongoose.Schema.Types.ObjectId,

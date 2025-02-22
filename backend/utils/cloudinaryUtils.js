@@ -31,16 +31,15 @@ const uploadOnCloudinary = async (localFilePath, fileType, mimetype) => {
             { width: 250, height: 250, crop: "thumb", gravity: "face" }, // Focus on the face
             { radius: "max" }, // Make the image rounded
           ],
-          timeout: 60000, // Increase timeout to 60 seconds
+          timeout: 120000, // Increase timeout to 120 seconds
         });
       } else if (mimetype === "application/pdf") {
         // If the file is a PDF, simply upload without any transformations
         console.log("two - PDF upload");
 
         response = await cloudinary.uploader.upload(localFilePath, {
-          resource_type: "raw",
-
-          timeout: 60000, // Increase timeout to 60 seconds
+          resource_type: "raw", // Use "raw" for non-image files like PDFs
+          timeout: 120000, // Increase timeout to 120 seconds
         });
       } else {
         // Handle other file types (optional)
@@ -48,7 +47,7 @@ const uploadOnCloudinary = async (localFilePath, fileType, mimetype) => {
 
         response = await cloudinary.uploader.upload(localFilePath, {
           resource_type: "auto", // Automatically determine the type
-          timeout: 60000, // Increase timeout to 60 seconds
+          timeout: 120000, // Increase timeout to 120 seconds
         });
       }
 

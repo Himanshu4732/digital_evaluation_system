@@ -11,9 +11,9 @@ const feedbackSchema = new mongoose.Schema({
         ref: 'Teacher',
         required: true
     },
-    paper: {
+    answerpaper: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Paper',
+        ref: 'AnswerPaper',
         required: true
     },
     feedbackMessage: {

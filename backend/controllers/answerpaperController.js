@@ -17,8 +17,7 @@ exports.createanswerPaper = async (req, res) => {
     if (!studentDetail) {
       return res.status(404).json({ message: "Student not found" });
     }
-
-    const pdf = req.files?.answerSheet?.[0];
+    const pdf = req.file
 
     if (!pdf) {
       return res.status(400).json({ message: "PDF file is required" });
