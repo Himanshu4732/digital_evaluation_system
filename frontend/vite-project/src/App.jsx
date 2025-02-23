@@ -1,5 +1,10 @@
 import React from 'react'
 import { Routes, Route } from "react-router-dom";
+import StudentLogin from './pages/StudentLogin';
+import StudentSignup from './pages/StudentSignup';
+import StudentProtectWrapper from './components/StudentProtectWrapper';
+import StudentDashboard from './pages/StudentDashboard';
+import StudentLogout from './pages/StudentLogout';
 
 function App() {
   return (
@@ -26,7 +31,7 @@ function App() {
           }
         /> */}
         <Route
-          path="/students/logout"
+          path="/student/logout"
           element={
             <StudentProtectWrapper>
               <StudentLogout />
