@@ -47,4 +47,6 @@ router.get('/profile', authMiddleware.authStudent, studentController.getStudentP
 
 router.get('/answerPaper', authMiddleware.authStudent, studentController.answerPaper);
 
+router.get('/logout', authMiddleware.authStudent, studentController.logoutStudent);
+
 module.exports = router;

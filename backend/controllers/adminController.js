@@ -6,6 +6,7 @@ const questionPaperModel = require('../models/questionPaperModel');
 const feedbackModel = require('../models/feedbackModel');
 const adminServer = require('../services/adminServer');
 const { validationResult } = require('express-validator');
+const blackListTokenModel = require('../models/blackListTokenModel');
 
 module.exports.registerAdmin = async (req, res, next) => {
 
@@ -106,5 +107,15 @@ module.exports.getDashboard = async (req, res, next) => {
         answerPapersStatus,
         feedbackMessagesStatus
     });
+
+}
+
+module.exports.logoutAdmin = async (req, res, next) => {
+    res.clearCookie('token');
+    const token = req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
+
+    await blackListTokenModel.create({ token });
+
+    res.status(200).json({ message: 'Logged out' });
 
 }

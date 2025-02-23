@@ -2,6 +2,7 @@ const teacherModel = require('../models/teacherModel');
 const teacherServer = require('../services/teacherServer');
 const { validationResult } = require('express-validator');
 const { uploadOnCloudinary } = require('../utils/cloudinaryUtils');
+const blackListTokenModel = require('../models/blackListTokenModel');
 
 module.exports.registerTeacher = async (req, res, next) => {
 
@@ -83,4 +84,14 @@ module.exports.assignedPaper = async (req, res, next) => {
     const papers = teacher.assignedPapers
 
     res.status(200).json(papers);
+}
+
+module.exports.logoutTeacher = async (req, res, next) => {
+    res.clearCookie('token');
+    const token = req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
+
+    await blackListTokenModel.create({ token });
+
+    res.status(200).json({ message: 'Logged out' });
+
 }
