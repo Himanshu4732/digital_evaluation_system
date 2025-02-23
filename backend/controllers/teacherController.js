@@ -78,9 +78,9 @@ module.exports.getTeacherProfile = async (req, res, next) => {
 
 module.exports.assignedPaper = async (req, res, next) => {
     
-    const teacher = req.teacher;
+    const teacher = await teacherModel.findById(req.teacher._id).populate('assignedPapers');
 
-    const papers = teacher.assignedPaper;
+    const papers = teacher.assignedPapers
 
     res.status(200).json(papers);
 }

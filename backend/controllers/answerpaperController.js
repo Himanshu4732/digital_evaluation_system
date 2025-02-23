@@ -39,7 +39,7 @@ exports.createanswerPaper = async (req, res) => {
     });
 
     await newPaper.save();
-    studentDetail.papers.push(newPaper._id);
+    studentDetail.answerpapers.push(newPaper._id);
     await studentDetail.save();
     res.status(201).json({ message: "Paper created successfully", paper: newPaper });
   } catch (error) {
@@ -131,21 +131,3 @@ exports.checkanswerPaper = async (req, res) => {
   }
 };
 
-
-exports.getStudentanswerPapers = async (req, res) => {
-  try {
-    const studentPapers = await answerpaperModel.find({ student: req.user.id });
-    res.status(200).json({ papers: studentPapers });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
-
-exports.getTeacheranswerPapers = async (req, res) => {
-  try {
-    const teacherPapers = await answerpaperModel.find({ teacher: req.user._id });
-    res.status(200).json({ papers: teacherPapers });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};

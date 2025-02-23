@@ -80,3 +80,12 @@ module.exports.loginStudent = async (req, res, next) => {
 module.exports.getStudentProfile = async (req, res, next) => {
   res.status(200).json(req.student);
 };
+
+module.exports.answerPaper = async (req, res, next) => {
+  const student = await studentModel.findById(req.student._id).populate('answerpapers');
+
+    const papers = student.answerpapers
+
+    res.status(200).json(papers);
+
+};

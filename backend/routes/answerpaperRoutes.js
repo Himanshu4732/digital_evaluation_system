@@ -54,10 +54,6 @@ router.patch(
   answerpaperController.checkanswerPaper
 );
 
-// getting all answerpapers of a student
-router.get("/student", auth.authStudent, answerpaperController.getStudentanswerPapers);
 
-// getting all answerpapers of a teacher
-router.get("/teacher", auth.authTeacher, answerpaperController.getTeacheranswerPapers);
 
 module.exports = router;

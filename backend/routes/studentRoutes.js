@@ -45,4 +45,6 @@ router.post(
 
 router.get('/profile', authMiddleware.authStudent, studentController.getStudentProfile);
 
+router.get('/answerPaper', authMiddleware.authStudent, studentController.answerPaper);
+
 module.exports = router;
