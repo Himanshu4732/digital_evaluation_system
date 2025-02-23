@@ -6,7 +6,7 @@ const questionController = require("../controllers/questionController")
 const router = express.Router();
 
 router.post(
-    '/createQuestion',
+    '/create',
     [
         body('questionNumber').isInt().withMessage('Question number must be an integer'),
         body('questionText').notEmpty().withMessage('Question text is required'),

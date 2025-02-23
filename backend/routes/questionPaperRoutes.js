@@ -4,7 +4,7 @@ const questionPaperController = require("../controllers/questionPaperController"
 
 const router = express.Router();
 router.post(
-    "/",
+    "/create",
     [
         body("subject").notEmpty().withMessage("Subject is required"),
         body("date_of_exam").isDate().withMessage("Valid date of exam is required"),

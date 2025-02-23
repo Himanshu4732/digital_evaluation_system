@@ -18,10 +18,11 @@ const answerpaperSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teacher'
     },
-    total_marks: {
-        type: Number ,
-        required: true
-    },
+    marks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Marks'
+    }
+    ],
     obtained_marks: {
         type: Number
     },

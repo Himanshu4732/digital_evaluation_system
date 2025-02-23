@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 const studentModel = require("../models/studentModel");
 const teacherModel = require("../models/teacherModel");
 const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
+const marksModel = require("../models/marksModel");
 
 exports.createanswerPaper = async (req, res) => {
   const errors = validationResult(req);
@@ -83,21 +84,45 @@ exports.assignanswerPaper = async (req, res) => {
 };
 
 exports.checkanswerPaper = async (req, res) => {
+  // Handle validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { marks } = req.body;
-  const { paperId } = req.params;
+  console.log(req.body.marks); // Debugging: Log marks to see what's being passed
+
+  const marks = req.body.marks;
+  const answerpaperId = req.params.answerpaperId;
+
+  if (!Array.isArray(marks)) {
+    return res.status(400).json({ message: "Marks must be an array" });
+  }
 
   try {
-    const paper = await answerpaperModel.findById(paperId);
+    const paper = await answerpaperModel.findById(answerpaperId);
     if (!paper) {
       return res.status(404).json({ message: "Paper not found" });
     }
 
-    paper.marks = marks;
+    for (const mark of marks) {
+      if (mark.obtainMarks < 0) {
+        return res.status(400).json({ message: "Marks cannot be negative" });
+      }
+
+      if (mark.obtainMarks > paper.total_marks) {
+        return res.status(400).json({ message: "Marks cannot be greater than total marks" });
+      }
+
+      const marksCreate = await marksModel.create({
+        marksObtained: mark.obtainMarks,
+        questionId: mark.questionId,
+        answerPaper: answerpaperId,
+      });
+
+      paper.marks.push(marksCreate._id);
+    }
+
     await paper.save();
 
     res.status(200).json({ message: "Paper checked successfully", paper });
@@ -105,6 +130,7 @@ exports.checkanswerPaper = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 exports.getStudentanswerPapers = async (req, res) => {
   try {
