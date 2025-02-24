@@ -10,7 +10,7 @@ cloudinary.config({
 });
 
 // Function to upload files to Cloudinary (with different handling for images and PDFs)
-const uploadOnCloudinary = async (localFilePath, fileType, mimetype) => {
+const uploadOnCloudinary = async (localFilePath, mimetype) => {
   const maxRetries = 3;
   let attempt = 0;
   let response;
@@ -31,7 +31,7 @@ const uploadOnCloudinary = async (localFilePath, fileType, mimetype) => {
             { width: 250, height: 250, crop: "thumb", gravity: "face" }, // Focus on the face
             { radius: "max" }, // Make the image rounded
           ],
-          timeout: 120000, // Increase timeout to 120 seconds
+          timeout: 180000, // Increase timeout to 180 seconds
         });
       } else if (mimetype === "application/pdf") {
         // If the file is a PDF, simply upload without any transformations
@@ -39,7 +39,7 @@ const uploadOnCloudinary = async (localFilePath, fileType, mimetype) => {
 
         response = await cloudinary.uploader.upload(localFilePath, {
           resource_type: "raw", // Use "raw" for non-image files like PDFs
-          timeout: 120000, // Increase timeout to 120 seconds
+          timeout: 180000, // Increase timeout to 180 seconds
         });
       } else {
         // Handle other file types (optional)
@@ -47,7 +47,7 @@ const uploadOnCloudinary = async (localFilePath, fileType, mimetype) => {
 
         response = await cloudinary.uploader.upload(localFilePath, {
           resource_type: "auto", // Automatically determine the type
-          timeout: 120000, // Increase timeout to 120 seconds
+          timeout: 180000, // Increase timeout to 180 seconds
         });
       }
 

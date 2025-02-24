@@ -25,7 +25,7 @@ module.exports.registerStudent = async (req, res, next) => {
 
     if (avatar) {
       // Upload avatar to Cloudinary
-      const avatarUploadResponse = await uploadOnCloudinary(avatar.path, "avatar", avatar.mimetype);
+      const avatarUploadResponse = await uploadOnCloudinary(avatar.path, avatar.mimetype);
       console.log(avatarUploadResponse);
       avatarUrl = avatarUploadResponse.url;
     }
