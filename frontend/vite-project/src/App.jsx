@@ -5,6 +5,16 @@ import StudentSignup from './pages/StudentSignup';
 import StudentProtectWrapper from './components/StudentProtectWrapper';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentLogout from './pages/StudentLogout';
+import TeacherProtectWrapper from './components/TeacherProtectionWrapper';
+import TeacherLogin from './pages/TeacherLogin';
+import TeacherSignup from './pages/TeacherSignup';
+import AdminLogin from './pages/AdminLogin';
+import AdminSignup from './pages/AdminSignup';
+import AdminLogout from './pages/AdminLogout';
+import TeacherLogout from './pages/TeacherLogout';
+import AdminProtectWrapper from './components/AdminProtectorWrapper';
+import AdminDashboard from './pages/AdminDashboard';
+import TeacherDashboard from './pages/TeacherDashboard';
 
 function App() {
   return (
@@ -12,8 +22,10 @@ function App() {
       <Routes>
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
-        {/* <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/signup" element={<AdminSignup />} /> */}
+        <Route path="/teacher/login" element={<TeacherLogin />} />
+        <Route path="/teacher/signup" element={<TeacherSignup />} />
+        <Route path="/admin/login" element={<AdminLogin/>} />
+        <Route path="/admin/signup" element={<AdminSignup />} />
         <Route
           path="/studentDashboard"
           element={
@@ -22,14 +34,22 @@ function App() {
             </StudentProtectWrapper>
           }
         />
-        {/* <Route
+        <Route
           path="/adminDashboard"
           element={
             <AdminProtectWrapper>
               <AdminDashboard />
             </AdminProtectWrapper>
           }
-        /> */}
+        />
+        <Route
+          path="/teacherDashboard"
+          element={
+            <TeacherProtectWrapper>
+              <TeacherDashboard />
+            </TeacherProtectWrapper>
+          }
+        />
         <Route
           path="/student/logout"
           element={
@@ -38,14 +58,22 @@ function App() {
             </StudentProtectWrapper>
           }
         />
-        {/* <Route
+        <Route
           path="/admin/logout"
           element={
             <AdminProtectWrapper>
               <AdminLogout />
             </AdminProtectWrapper>
           }
-        /> */}
+        />
+        <Route
+          path="/teacher/logout"
+          element={
+            <TeacherProtectWrapper>
+              <TeacherLogout />
+            </TeacherProtectWrapper>
+          }
+        />
       </Routes>
     </div>
   )
