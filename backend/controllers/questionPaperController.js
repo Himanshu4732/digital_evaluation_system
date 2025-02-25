@@ -1,5 +1,7 @@
 const { validationResult } = require('express-validator');
 const QuestionPaper = require('../models/questionPaperModel');
+const examModel = require('../models/examModel');
+const subjectModel = require('../models/subjectModel');
 
 // filepath: /c:/Users/himan/OneDrive/Desktop/digitalEvaluationSystem/backend/controllers/questionPaperController.js
 
@@ -9,13 +11,26 @@ exports.createQuestionPaper = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { subject, date_of_exam, total_marks } = req.body;
+    const { subject, exam, total_marks } = req.body;
+
+
+ const examId = await examModel.findOne({ name : exam });
+
+    if (!examId) {
+      return res.status(404).json({ message: "Exam not found" });
+    }
+
+    const subjectId = await subjectModel.findOne({ name : subject });
+
+    if (!subjectId) {
+      return res.status(404).json({ message: "Subject not found" });
+    }
 
     try {
         const questionPaper = new QuestionPaper({
-            subject,
-            date_of_exam,
-            total_marks,
+            subject: subjectId._id,
+            exam,
+            total_marks: total_marks,
         });
 
         await questionPaper.save();

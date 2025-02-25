@@ -43,7 +43,7 @@ const FeedbackStatus = ({ data }) => {
   };
 
   return (
-    <Paper elevation={20} className="p-6 bg-zinc-800 w-96 h-96" style={{ backgroundColor:"rgb(50 50 50)" } }>
+    <Paper elevation={20} className="p-6 bg-zinc-800 w-96 h-120" style={{ backgroundColor:"rgb(50 50 50)" } }>
       <Typography variant="h5" className="mb-4 text-blue-400">
         Feedback Messages Status
       </Typography>

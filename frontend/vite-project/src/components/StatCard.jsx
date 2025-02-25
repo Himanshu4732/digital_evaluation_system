@@ -11,19 +11,19 @@ const StatCard = ({ data }) => {
   ];
 
   return (
-    <Grid2 container spacing={3} className="mb-6">
+    <Grid2 container spacing={2} className="mb-6" columns={13}>
       {stats.map((stat, index) => (
-        <Grid2 item xs={12} md={4} key={index}>
+        <Grid2 item xs={12} md={4} key={index} size={4}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
             <Paper elevation={3} className="p-6 text-center" style={{ backgroundColor: stat.color }}>
-              <Typography variant="h6" className="text-white">
+              <Typography variant="h8" className="text-white">
                 {stat.title}
               </Typography>
-              <Typography variant="h4" className="mt-2 text-white">
+              <Typography variant="h5" className="mt-2 text-white">
                 {stat.value}
               </Typography>
             </Paper>

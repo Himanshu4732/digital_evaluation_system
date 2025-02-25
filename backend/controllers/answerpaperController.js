@@ -4,6 +4,8 @@ const studentModel = require("../models/studentModel");
 const teacherModel = require("../models/teacherModel");
 const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
 const marksModel = require("../models/marksModel");
+const examModel = require("../models/examModel");
+const subjectModel = require("../models/subjectModel");
 
 exports.createanswerPaper = async (req, res) => {
   const errors = validationResult(req);
@@ -11,13 +13,25 @@ exports.createanswerPaper = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { subject, date_of_exam, studentEmail, total_marks } = req.body;
+  const { subject , exam , studentEmail, total_marks } = req.body;
 
   try {
     const studentDetail = await studentModel.findOne({ email: studentEmail });
 
     if (!studentDetail) {
       return res.status(404).json({ message: "Student not found" });
+    }
+
+    const examId = await examModel.findOne({ name : exam });
+
+    if (!examId) {
+      return res.status(404).json({ message: "Exam not found" });
+    }
+
+    const subjectId = await subjectModel.findOne({ name : subject });
+
+    if (!subjectId) {
+      return res.status(404).json({ message: "Subject not found" });
     }
 
     const pdf = req.file;
@@ -31,8 +45,8 @@ exports.createanswerPaper = async (req, res) => {
     const answerSheetUrl = answerUploadResponse.url;
 
     const newPaper = new answerpaperModel({
-      subject,
-      date_of_exam,
+      subject: subjectId._id,
+      exam: examId._id,
       student: studentDetail._id,
       total_marks,
       answerSheet: answerSheetUrl,

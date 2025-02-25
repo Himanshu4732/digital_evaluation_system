@@ -3,6 +3,7 @@ const studentServer = require("../services/studentServer");
 const { validationResult } = require("express-validator");
 const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
 const blackListTokenModel = require("../models/blackListTokenModel");
+const sectionModel = require("../models/sectionModel");
 
 module.exports.registerStudent = async (req, res, next) => {
   const errors = validationResult(req);
@@ -10,9 +11,15 @@ module.exports.registerStudent = async (req, res, next) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, roll_no, section, semester } = req.body;
+  const { name, email, password, roll_no, section , semester } = req.body; 
 
   const isStudentAlready = await studentModel.findOne({ email });
+
+  const sectionId = await sectionModel.findOne({ name: section });
+
+  if (!sectionId) {
+    return res.status(404).json({ message: "Section not found" });
+  }
 
   if (isStudentAlready) {
     return res.status(400).json({ message: "Student already exists" });
@@ -35,7 +42,7 @@ module.exports.registerStudent = async (req, res, next) => {
     const student = await studentServer.createStudent({
       name,
       email,
-      section,
+      section: sectionId,
       avatar: avatarUrl,
       roll_no,
       semester,

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Typography } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import AnswerPapersStatus from "../components/AnswerPaperStatus";
 import FeedbackStatus from "../components/FeedbackStatus";
 import StatCard from "../components/StatCard";
+import Fileupload from "../components/Fileupload";
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -39,27 +40,38 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="bg-zinc-800 w-full h-screen text-white">
+    <div className="bg-zinc-800 w-full h-screen text-white overflow-y-auto">
       <Navbar />
-      <div className="dashboard-container p-8 ">
-        <Typography variant="h3" className="text-center mb-4 text-blue-400 ">
-          Admin Dashboard
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          className="text-center text-zinc-400 mb-8"
-        >
-          Welcome back! Here's an overview of your system's performance.
-        </Typography>
+      <div className="dashboard-container p-8 py-40">
+        <Grid2 container spacing={3} columns={12}>
+          {/* Fileupload Section */}
+          <Grid2   spacing={1} size={4} container columns={4}>
+            <Grid2 items size={2}>
+            <Fileupload />
+            </Grid2>
+            <Grid2 items size={2}>
+            <Fileupload />
+            </Grid2>
+            
+            
+          </Grid2>
 
-        {/* Stat Cards */}
-        <StatCard data={dashboardData} />
+          {/* StatCard Section */}
+          <Grid2 item xs={12} md={8}>
+            <StatCard data={dashboardData} />
+          </Grid2>
+          
 
-        <div className="flex justify-center gap-8 mt-8">
-          <AnswerPapersStatus data={dashboardData.answerPapersStatus} />
+          {/* AnswerPapersStatus Section */}
+          <Grid2 item xs={12} md={6}>
+            <AnswerPapersStatus data={dashboardData.answerPapersStatus} />
+          </Grid2>
 
-          <FeedbackStatus data={dashboardData.feedbackMessagesStatus} />
-        </div>
+          {/* FeedbackStatus Section */}
+          <Grid2 item xs={12} md={6}>
+            <FeedbackStatus data={dashboardData.feedbackMessagesStatus} />
+          </Grid2>
+        </Grid2>
       </div>
     </div>
   );

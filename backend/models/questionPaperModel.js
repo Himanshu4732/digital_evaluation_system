@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const questionPaperSchema = new mongoose.Schema({
     subject: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject',
     },
-    date_of_exam: {
-        type: Date,
-        required: true
+    exam:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Exam',
     },
     total_marks: {
         type: Number,

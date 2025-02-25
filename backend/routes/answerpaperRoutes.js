@@ -11,15 +11,13 @@ router.post(
   [
     auth.authAdmin,
     body("subject").notEmpty().withMessage("subject is required"),
-    body("date_of_exam")
-      .isDate()
-      .notEmpty()
-      .withMessage("valid date is required"),
     body("total_marks")
       .notEmpty()
       .isNumeric()
       .withMessage("valid number is required"),
     body("studentEmail").notEmpty().withMessage("student is required"),
+    body("exam").notEmpty().withMessage("exam is required"),
+    body("subject").notEmpty().withMessage("subject is required"),
   ],
   answerpaperController.createanswerPaper
 );

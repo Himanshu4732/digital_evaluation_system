@@ -7,7 +7,7 @@ router.post(
     "/create",
     [
         body("subject").notEmpty().withMessage("Subject is required"),
-        body("date_of_exam").isDate().withMessage("Valid date of exam is required"),
+        body("exam").notEmpty().withMessage("exam is required"),
         body("total_marks").isInt({ min: 0 }).withMessage("Total marks must be a positive integer"),
     ],
     questionPaperController.createQuestionPaper
