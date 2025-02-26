@@ -36,5 +36,6 @@ app.use('/questionPaper',questionPaperRoutes);
 app.use('/marks',marksRoutes);
 app.use('/question',questionRoutes);
 app.use('/exam',examRoutes);
+// app.use('/section',require('./routes/sectionRoutes'));
 
 module.exports = app;

@@ -81,6 +81,8 @@ exports.assignanswerPaper = async (req, res) => {
       return res.status(404).json({ message: "Paper not found" });
     }
 
+
+
     const teacher = await teacherModel.findOne({ email: teacherEmail });
 
     if (!teacher) {
@@ -88,12 +90,15 @@ exports.assignanswerPaper = async (req, res) => {
     }
 
     paper.teacher = teacher._id;
+    paper.status = "Pending";
     await paper.save();
 
     if (!teacher.assignedPapers.includes(paper._id)) {
       teacher.assignedPapers.push(paper._id);
       await teacher.save();
     }
+
+
 
     res.status(200).json({ message: "Paper assigned successfully", paper });
   } catch (error) {
