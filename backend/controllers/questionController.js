@@ -49,7 +49,7 @@ exports.deleteQuestion = async (req, res) => {
             await questionPaper.save();
         }
 
-        await question.remove();
+        await Question.findByIdAndDelete(id);
 
         res.status(200).json({ message: 'Question deleted successfully' });
     } catch (error) {
@@ -61,19 +61,14 @@ exports.updateQuestion = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const question = await
-        Question
-            .findByIdAndUpdate(id, req.body, { new: true });
+        const question = await Question.findByIdAndUpdate(id, req.body, { new: true });
 
         if (!question) {
             return res.status(404).json({ message: 'Question not found' });
         }
 
         res.status(200).json({ message: 'Question updated successfully', question });
-    }
-
-    catch (error) {
+    } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
-
-}
+};

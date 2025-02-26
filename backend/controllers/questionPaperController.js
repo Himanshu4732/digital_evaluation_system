@@ -39,3 +39,27 @@ exports.createQuestionPaper = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
+exports.getAllQuestionPapers = async (req, res) => {
+    try {
+        const questionPapers = await QuestionPaper.find().populate('subject').populate('exam');
+        res.status(200).json(questionPapers);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+exports.getQuestionPaperById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        
+        const questionPaper = await QuestionPaper.findById(id).populate('subject').populate('exam').populate('questions');
+        if (!questionPaper) {
+            return res.status(404).json({ message: 'Question paper not found' });
+        }
+        res.status(200).json(questionPaper);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};

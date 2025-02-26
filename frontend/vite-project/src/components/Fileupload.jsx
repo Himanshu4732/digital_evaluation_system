@@ -1,12 +1,30 @@
-import { Paper } from '@mui/material'
-import React from 'react'
+import React, { useState } from "react";
+import { Button } from "@mui/material";
+import QuestionPaperForm from "./QuestionPaperForm";
 
-function Fileupload() {
+const Fileupload = ({ fetchQuestionPapers }) => {
+  const [openForm, setOpenForm] = useState(false);
+
+  const handleOpenForm = () => {
+    setOpenForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setOpenForm(false);
+  };
+
   return (
-    <Paper elevation={20} className="p-6 w-56 h-56 rounded-3xl">
-        <h1>upload file</h1>
-    </Paper>
-  )
-}
+    <div className="flex flex-col items-center bg-zinc-700">
+      <Button variant="contained" color="primary" onClick={handleOpenForm}>
+        Upload Files
+      </Button>
+      <QuestionPaperForm
+        open={openForm}
+        handleClose={handleCloseForm}
+        fetchQuestionPapers={fetchQuestionPapers}
+      />
+    </div>
+  );
+};
 
-export default Fileupload
+export default Fileupload;

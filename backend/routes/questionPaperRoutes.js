@@ -13,4 +13,10 @@ router.post(
     questionPaperController.createQuestionPaper
 );
 
+//get all question papers
+router.get("/all", questionPaperController.getAllQuestionPapers);
+
+//view question paper by id
+router.get("/:id", questionPaperController.getQuestionPaperById);
+
 module.exports = router;

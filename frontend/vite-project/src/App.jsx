@@ -1,21 +1,23 @@
-import React from 'react'
+import React from "react";
 import { Routes, Route } from "react-router-dom";
-import StudentLogin from './pages/StudentLogin';
-import StudentSignup from './pages/StudentSignup';
-import StudentProtectWrapper from './components/StudentProtectWrapper';
-import StudentDashboard from './pages/StudentDashboard';
-import StudentLogout from './pages/StudentLogout';
-import TeacherProtectWrapper from './components/TeacherProtectionWrapper';
-import TeacherLogin from './pages/TeacherLogin';
-import TeacherSignup from './pages/TeacherSignup';
-import AdminLogin from './pages/AdminLogin';
-import AdminSignup from './pages/AdminSignup';
-import AdminLogout from './pages/AdminLogout';
-import TeacherLogout from './pages/TeacherLogout';
-import AdminProtectWrapper from './components/AdminProtectorWrapper';
-import AdminDashboard from './pages/AdminDashboard';
-import TeacherDashboard from './pages/TeacherDashboard';
-import AdminExamsPage from './pages/AdminExamView';
+import StudentLogin from "./pages/StudentLogin";
+import StudentSignup from "./pages/StudentSignup";
+import StudentProtectWrapper from "./components/StudentProtectWrapper";
+import StudentDashboard from "./pages/StudentDashboard";
+import StudentLogout from "./pages/StudentLogout";
+import TeacherProtectWrapper from "./components/TeacherProtectionWrapper";
+import TeacherLogin from "./pages/TeacherLogin";
+import TeacherSignup from "./pages/TeacherSignup";
+import AdminLogin from "./pages/AdminLogin";
+import AdminSignup from "./pages/AdminSignup";
+import AdminLogout from "./pages/AdminLogout";
+import TeacherLogout from "./pages/TeacherLogout";
+import AdminProtectWrapper from "./components/AdminProtectorWrapper";
+import AdminDashboard from "./pages/AdminDashboard";
+import TeacherDashboard from "./pages/TeacherDashboard";
+import AdminExamsPage from "./pages/AdminExamView";
+import QuestionPaperDetail from "./components/QuestionPaperDetail";
+import AllQuestionPaper from "./pages/AllQuestionPaper";
 
 function App() {
   return (
@@ -25,9 +27,11 @@ function App() {
         <Route path="/student/signup" element={<StudentSignup />} />
         <Route path="/teacher/login" element={<TeacherLogin />} />
         <Route path="/teacher/signup" element={<TeacherSignup />} />
-        <Route path="/admin/login" element={<AdminLogin/>} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/signup" element={<AdminSignup />} />
         <Route path="/admin/examView" element={<AdminExamsPage />} />
+        <Route path="/all/QuestionPaper" element={<AllQuestionPaper />} />
+        <Route path="/question-paper/:id" element={<QuestionPaperDetail />} />
         <Route
           path="/studentDashboard"
           element={
@@ -78,7 +82,7 @@ function App() {
         />
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

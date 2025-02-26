@@ -12,16 +12,16 @@ const Navbar = () => (
           Admin Dashboard
         </Typography>
       <li className='flex justify-center items-center gap-4'>
-      <li>
+      <div>
         <Link to="/admin/profile" className="hover:underline hover:text-blue-200">
           Profile
         </Link>
-      </li>
-      <li>
+      </div>
+      <div>
         <Link to="/admin/logout" className="bg-red-700 px-4 py-2 rounded-lg hover:bg-red-600">
           Logout
         </Link>
-      </li>
+      </div>
       </li>
     </ul>
   </nav>
