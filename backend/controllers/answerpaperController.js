@@ -13,7 +13,7 @@ exports.createanswerPaper = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { subject , exam , studentEmail, total_marks } = req.body;
+  const { subject, exam, studentEmail, total_marks } = req.body;
 
   try {
     const studentDetail = await studentModel.findOne({ email: studentEmail });
@@ -22,13 +22,13 @@ exports.createanswerPaper = async (req, res) => {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    const examId = await examModel.findOne({ name : exam });
+    const examId = await examModel.findOne({ examType: exam });
 
     if (!examId) {
       return res.status(404).json({ message: "Exam not found" });
     }
 
-    const subjectId = await subjectModel.findOne({ name : subject });
+    const subjectId = await subjectModel.findOne({ subjectname: subject });
 
     if (!subjectId) {
       return res.status(404).json({ message: "Subject not found" });
@@ -40,7 +40,10 @@ exports.createanswerPaper = async (req, res) => {
       return res.status(400).json({ message: "PDF file is required" });
     }
 
-    const answerUploadResponse = await uploadOnCloudinary(pdf.path, "pdf", pdf.mimetype);
+    console.log("Uploading file to Cloudinary:", pdf.path); // Log the file path
+    console.log("File MIME type:", pdf.mimetype); // Log the MIME type
+
+    const answerUploadResponse = await uploadOnCloudinary(pdf.path, pdf.mimetype);
 
     const answerSheetUrl = answerUploadResponse.url;
 
@@ -57,6 +60,7 @@ exports.createanswerPaper = async (req, res) => {
     await studentDetail.save();
     res.status(201).json({ message: "Paper created successfully", paper: newPaper });
   } catch (error) {
+    console.error("Error in createanswerPaper:", error); // Log the error
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -145,3 +149,11 @@ exports.checkanswerPaper = async (req, res) => {
   }
 };
 
+exports.getAllAnswerPapers = async (req, res) => {
+  try {
+    const papers = await answerpaperModel.find().populate("subject").populate("exam").populate("student").populate("teacher").populate("marks");
+    res.status(200).json(papers);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

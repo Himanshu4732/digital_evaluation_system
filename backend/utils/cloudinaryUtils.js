@@ -21,35 +21,12 @@ const uploadOnCloudinary = async (localFilePath, mimetype) => {
       console.log("MIME Type:", mimetype); // Log the MIME type for debugging
       if (!localFilePath) return null;
 
-      if (mimetype.includes("image")) {
-        // If the file is an avatar (image), apply face detection and rounding transformations
-        console.log("one - Image upload");
+      const uploadOptions = {
+        resource_type: mimetype.includes("image") ? "image" : "raw",
+        timeout: 180000, // 180 seconds timeout
+      };
 
-        response = await cloudinary.uploader.upload(localFilePath, {
-          resource_type: "image", // Specify that it's an image
-          transformation: [
-            { width: 250, height: 250, crop: "thumb", gravity: "face" }, // Focus on the face
-            { radius: "max" }, // Make the image rounded
-          ],
-          timeout: 180000, // Increase timeout to 180 seconds
-        });
-      } else if (mimetype === "application/pdf") {
-        // If the file is a PDF, simply upload without any transformations
-        console.log("two - PDF upload");
-
-        response = await cloudinary.uploader.upload(localFilePath, {
-          resource_type: "raw", // Use "raw" for non-image files like PDFs
-          timeout: 180000, // Increase timeout to 180 seconds
-        });
-      } else {
-        // Handle other file types (optional)
-        console.log("three - Other file type");
-
-        response = await cloudinary.uploader.upload(localFilePath, {
-          resource_type: "auto", // Automatically determine the type
-          timeout: 180000, // Increase timeout to 180 seconds
-        });
-      }
+      response = await cloudinary.uploader.upload(localFilePath, uploadOptions);
 
       // File uploaded successfully, delete the local file
       fs.unlinkSync(localFilePath);

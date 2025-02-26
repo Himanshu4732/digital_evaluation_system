@@ -6,6 +6,7 @@ import AnswerPapersStatus from "../components/AnswerPaperStatus";
 import FeedbackStatus from "../components/FeedbackStatus";
 import StatCard from "../components/StatCard";
 import Fileupload from "../components/Fileupload";
+import FileUploadAnswerPaper from "../components/FileUploadAnswerPaper";
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -50,7 +51,7 @@ const AdminDashboard = () => {
             <Fileupload />
             </Grid2>
             <Grid2 items size={2}>
-            <Fileupload />
+            <FileUploadAnswerPaper />
             </Grid2>
             
             

@@ -52,6 +52,8 @@ router.patch(
   answerpaperController.checkanswerPaper
 );
 
+router.get("/all", auth.authAdmin, answerpaperController.getAllAnswerPapers);
+
 
 
 module.exports = router;

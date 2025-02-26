@@ -18,6 +18,7 @@ import TeacherDashboard from "./pages/TeacherDashboard";
 import AdminExamsPage from "./pages/AdminExamView";
 import QuestionPaperDetail from "./components/QuestionPaperDetail";
 import AllQuestionPaper from "./pages/AllQuestionPaper";
+import AllAnswerPapers from "./pages/AllAnswerPapers";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/signup" element={<AdminSignup />} />
         <Route path="/admin/examView" element={<AdminExamsPage />} />
+        <Route path="/all/AnswerPapers" element={<AllAnswerPapers />} />
         <Route path="/all/QuestionPaper" element={<AllQuestionPaper />} />
         <Route path="/question-paper/:id" element={<QuestionPaperDetail />} />
         <Route

@@ -1,15 +1,17 @@
 const multer = require("multer");
 const path = require("path");
 
-// Update the path to resolve the correct absolute directory
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.resolve("public/temp")); // Resolves the path to avoid issues
+    const tempDir = path.resolve("public/temp");
+    console.log("Saving file to:", tempDir); // Log the destination directory
+    cb(null, tempDir);
   },
   filename: function (req, file, cb) {
-    // To avoid overwriting, append Date.now() to the file name
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
+    const uniqueFileName = `${Date.now()}-${file.originalname}`;
+    console.log("Generated file name:", uniqueFileName); // Log the file name
+    cb(null, uniqueFileName);
+  },
 });
 
 const upload = multer({ storage });
