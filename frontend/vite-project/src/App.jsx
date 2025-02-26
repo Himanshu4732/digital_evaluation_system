@@ -15,6 +15,7 @@ import TeacherLogout from './pages/TeacherLogout';
 import AdminProtectWrapper from './components/AdminProtectorWrapper';
 import AdminDashboard from './pages/AdminDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
+import AdminExamsPage from './pages/AdminExamView';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/teacher/signup" element={<TeacherSignup />} />
         <Route path="/admin/login" element={<AdminLogin/>} />
         <Route path="/admin/signup" element={<AdminSignup />} />
+        <Route path="/admin/examView" element={<AdminExamsPage />} />
         <Route
           path="/studentDashboard"
           element={
