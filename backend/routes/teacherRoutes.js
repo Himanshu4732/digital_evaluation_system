@@ -41,4 +41,6 @@ router.get('/assignedPaper', authMiddleware.authTeacher, teacherController.assig
 //logout route
 router.get('/logout', authMiddleware.authTeacher, teacherController.logoutTeacher);
 
+router.get('/dashboard', authMiddleware.authTeacher, teacherController.getTeacherDashboard);
+
 module.exports = router;

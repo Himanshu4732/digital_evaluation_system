@@ -48,7 +48,7 @@ const AnswerPaperForm = ({ open, handleClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} >
       <DialogTitle>Upload Answer Paper</DialogTitle>
       <DialogContent>
         <TextField

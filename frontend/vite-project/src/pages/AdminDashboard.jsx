@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Grid2 } from "@mui/material";
+import { Grid2, Paper } from "@mui/material";
 import Navbar from "../components/Navbar";
 import AnswerPapersStatus from "../components/AnswerPaperStatus";
 import FeedbackStatus from "../components/FeedbackStatus";
 import StatCard from "../components/StatCard";
 import Fileupload from "../components/Fileupload";
 import FileUploadAnswerPaper from "../components/FileUploadAnswerPaper";
+import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -43,7 +44,7 @@ const AdminDashboard = () => {
   return (
     <div className="bg-zinc-800 w-full h-screen text-white overflow-y-auto">
       <Navbar />
-      <div className="dashboard-container p-8 py-40">
+      <div className="dashboard-container p-8 pb-4 py-40">
         <Grid2 container spacing={3} columns={12}>
           {/* Fileupload Section */}
           <Grid2   spacing={1} size={4} container columns={4}>
@@ -52,6 +53,20 @@ const AdminDashboard = () => {
             </Grid2>
             <Grid2 items size={2}>
             <FileUploadAnswerPaper />
+            </Grid2>
+            <Grid2 items size={2}>
+            <Link to="/all/Questionpaper">
+              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", alignItems: "center"}}>
+                <h1 className="text-blue-500 uppercase w-full font-semibold">All Question papers</h1>
+              </Paper>
+              </Link>
+            </Grid2>
+            <Grid2 items size={2}>
+            <Link to="/all/Answerpapers">
+              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", alignItems: "center"}}>
+                <h1 className="text-blue-500 uppercase w-full font-semibold">All Answer papers</h1>
+              </Paper>
+              </Link>
             </Grid2>
             
             
