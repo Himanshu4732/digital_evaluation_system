@@ -14,11 +14,13 @@ import AdminLogout from "./pages/AdminLogout";
 import TeacherLogout from "./pages/TeacherLogout";
 import AdminProtectWrapper from "./components/AdminProtectorWrapper";
 import AdminDashboard from "./pages/AdminDashboard";
-import TeacherDashboard from "./pages/TeacherDashboard";
+import TeacherDashboard from "./teacher/TeacherDashboard";
 import AdminExamsPage from "./pages/AdminExamView";
 import QuestionPaperDetail from "./components/QuestionPaperDetail";
 import AllQuestionPaper from "./pages/AllQuestionPaper";
 import AllAnswerPapers from "./pages/AllAnswerPapers";
+import AssignedPapers from "./teacher/AssignedPapers";
+import EvaluatePaper from "./teacher/EvaluatePaper";
 
 function App() {
   return (
@@ -34,6 +36,9 @@ function App() {
         <Route path="/all/AnswerPapers" element={<AllAnswerPapers />} />
         <Route path="/all/QuestionPaper" element={<AllQuestionPaper />} />
         <Route path="/question-paper/:id" element={<QuestionPaperDetail />} />
+        <Route path="/teacherDashboard" element={<TeacherDashboard />} />
+        <Route path="/teacher/assigned-papers" element={<AssignedPapers />} />
+        <Route path="/teacher/evaluate-paper/:id" element={<EvaluatePaper />} />
         <Route
           path="/studentDashboard"
           element={
@@ -50,14 +55,14 @@ function App() {
             </AdminProtectWrapper>
           }
         />
-        <Route
+        {/* <Route
           path="/teacherDashboard"
           element={
             <TeacherProtectWrapper>
               <TeacherDashboard />
             </TeacherProtectWrapper>
           }
-        />
+        /> */}
         <Route
           path="/student/logout"
           element={

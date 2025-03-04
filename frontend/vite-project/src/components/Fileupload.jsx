@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import QuestionPaperForm from "./QuestionPaperForm";
 
 const Fileupload = ({ fetchQuestionPapers }) => {
@@ -14,16 +14,18 @@ const Fileupload = ({ fetchQuestionPapers }) => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-zinc-700">
+    <Paper elevation={10} style={{backgroundColor: "rgb(50,50,50)", display: "flex", justifyContent: "center", alignItems: "center", padding: "1rem", flexDirection: "column"}}>
+
       <Button variant="contained" color="primary" onClick={handleOpenForm}>
-        Upload Files
+        Create
       </Button>
+      <p className="text-white text-center text-sm p-2 font-sans">Create a new question paper</p>
       <QuestionPaperForm
         open={openForm}
         handleClose={handleCloseForm}
         fetchQuestionPapers={fetchQuestionPapers}
       />
-    </div>
+    </Paper>
   );
 };
 
