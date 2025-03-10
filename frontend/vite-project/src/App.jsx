@@ -38,6 +38,7 @@ function App() {
         <Route path="/question-paper/:id" element={<QuestionPaperDetail />} />
         <Route path="/teacherDashboard" element={<TeacherDashboard />} />
         <Route path="/teacher/assigned-papers" element={<AssignedPapers />} />
+      
         <Route path="/teacher/evaluate-paper/:id" element={<EvaluatePaper />} />
         <Route
           path="/studentDashboard"

@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const { answerPaper } = require('../controllers/studentController');
 
 const examSchema = new mongoose.Schema({
+    name:{
+        type:String,
+    },
     examType: {
         type: String,
         enum: ['midterm', 'endterm'],

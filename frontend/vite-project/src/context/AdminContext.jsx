@@ -6,8 +6,8 @@ export const AdminDataContext = createContext()
 const AdminContext = ({ children }) => {
 
     const [ admin, setAdmin ] = useState({
-        email: '',
-        name: '',
+        email:'',
+        name:'',
     })
 
     return (

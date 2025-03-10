@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Autocomplete } from "@mui/material";
 import axios from "axios";
 
 const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
@@ -10,14 +10,45 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
     questions: [],
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const [subjects, setSubjects] = useState([]); // List of subjects for suggestions
+  const [exams, setExams] = useState([]); // List of exams for suggestions
+
+  // Fetch subjects and exams for suggestions
+  useEffect(() => {
+    const fetchSubjectsAndExams = async () => {
+      try {
+        const subjectsResponse = await axios.get("http://localhost:8000/subject/all", {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        console.log(subjectsResponse.data);
+        setSubjects(subjectsResponse.data);
+
+        const examsResponse = await axios.get("http://localhost:8000/exam/all", {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        console.log(examsResponse.data);
+        setExams(examsResponse.data);
+      } catch (error) {
+        console.error("Error fetching subjects or exams", error);
+      }
+    };
+
+    fetchSubjectsAndExams();
+  }, []);
+
+  const handleInputChange = (e, value, field) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:8000/admin/question-papers", formData, {
+      await axios.post("http://localhost:8000/questionPaper/create", formData, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -34,29 +65,48 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Create New Question Paper</DialogTitle>
       <DialogContent>
-        <TextField
-          name="subject"
-          label="Subject ID"
-          fullWidth
-          margin="normal"
+        {/* Subject Autocomplete */}
+        <Autocomplete
+          options={subjects}
+          getOptionLabel={(subject) => subject.subjectName || ""}
           value={formData.subject}
-          onChange={handleInputChange}
+          onChange={(e, value) => handleInputChange(e, value, "subject")}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              name="subject"
+              label="Subject"
+              fullWidth
+              margin="normal"
+            />
+          )}
         />
-        <TextField
-          name="exam"
-          label="Exam ID"
-          fullWidth
-          margin="normal"
+
+        {/* Exam Autocomplete */}
+        <Autocomplete
+          options={exams}
+          getOptionLabel={(exam) => exam.name || ""}
           value={formData.exam}
-          onChange={handleInputChange}
+          onChange={(e, value) => handleInputChange(e, value, "exam")}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              name="exam"
+              label="Exam"
+              fullWidth
+              margin="normal"
+            />
+          )}
         />
+
+        {/* Total Marks */}
         <TextField
           name="total_marks"
           label="Total Marks"
           fullWidth
           margin="normal"
           value={formData.total_marks}
-          onChange={handleInputChange}
+          onChange={(e) => handleInputChange(e, e.target.value, "total_marks")}
         />
       </DialogContent>
       <DialogActions>

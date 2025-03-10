@@ -26,7 +26,12 @@ const AdminLogin = () => {
 
         if (response.status === 200) {
             const data = response.data;
-            setAdmin(data.admin);
+            console.log(data.admin);
+            setAdmin({
+                email: data.admin.email,
+                name: data.admin.name,
+              });
+            console.log(admin)
             localStorage.setItem("token", data.token);
             navigate("/adminDashboard");
         }

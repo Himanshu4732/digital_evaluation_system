@@ -20,28 +20,28 @@ const AllQuestionPaper = () => {
         },
       });
       setQuestionPapers(response.data);
-      groupPapersByExamType(response.data); // Group papers by exam type
+      groupPapersByexamname(response.data); // Group papers by exam type
     } catch (error) {
       console.error("Error fetching question papers", error);
     }
   };
 
   // Group question papers by exam type
-  const groupPapersByExamType = (papers) => {
+  const groupPapersByexamname = (papers) => {
     const grouped = {};
     papers.forEach((paper) => {
-      const examType = paper.exam.examType; // Assuming `examType` is a field in the `exam` object
-      if (!grouped[examType]) {
-        grouped[examType] = [];
+      const examname = paper.exam.name; // Assuming `examname` is a field in the `exam` object
+      if (!grouped[examname]) {
+        grouped[examname] = [];
       }
-      grouped[examType].push(paper);
+      grouped[examname].push(paper);
     });
     setGroupedPapers(grouped);
   };
 
   // Handle exam type click
-  const handleExamClick = (examType) => {
-    setSelectedExam(examType);
+  const handleExamClick = (examname) => {
+    setSelectedExam(examname);
   };
 
   // Handle delete question paper
@@ -73,19 +73,19 @@ const AllQuestionPaper = () => {
       {/* Display Exam Types */}
       {!selectedExam && (
         <Grid container spacing={3}>
-          {Object.keys(groupedPapers).map((examType) => (
-            <Grid item xs={12} sm={6} md={4} key={examType}>
+          {Object.keys(groupedPapers).map((examname) => (
+            <Grid item xs={12} sm={6} md={4} key={examname}>
               <Paper
                 elevation={10}
                 style={{ backgroundColor: "#1e1e1e" }}
                 className="p-6 text-center cursor-pointer"
-                onClick={() => handleExamClick(examType)}
+                onClick={() => handleExamClick(examname)}
               >
                 <Typography variant="h6" className="text-blue-400">
-                  Exam Type: {examType}
+                  Exam name: {examname}
                 </Typography>
                 <Typography variant="body2" className="text-zinc-400">
-                  Papers: {groupedPapers[examType].length}
+                  Papers: {groupedPapers[examname].length}
                 </Typography>
               </Paper>
             </Grid>
@@ -115,7 +115,7 @@ const AllQuestionPaper = () => {
                     Subject: {paper.subject.subjectname}
                   </Typography>
                   <Typography variant="body1" className="text-white">
-                    Exam: {paper.exam.examType} ({new Date(paper.exam.dateOfExam).toLocaleDateString()})
+                    Exam: {paper.exam.examname} ({new Date(paper.exam.dateOfExam).toLocaleDateString()})
                   </Typography>
                   <Typography variant="body2" className="text-zinc-400">
                     Total Marks: {paper.total_marks}

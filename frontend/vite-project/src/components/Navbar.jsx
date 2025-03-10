@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
 import { Typography } from '@mui/material';
+import { AdminDataContext } from '../context/AdminContext';
+import { useContext , useEffect } from 'react';
 
-const Navbar = () => (
+const Navbar = () => {
+  const { admin, setAdmin } = useContext(AdminDataContext);
+  useEffect(() => {
+    console.log(admin.name);
+  }, [admin]);
+  return(
+
   <nav className="navbar bg-zinc-900/75   p-4 text-white shadow-lg  fixed top-0 left-0 z-50 w-full backdrop-filter backdrop-blur-lg">
 
     <ul className="flex justify-between items-center">
@@ -26,5 +34,6 @@ const Navbar = () => (
     </ul>
   </nav>
 );
+};
 
 export default Navbar;

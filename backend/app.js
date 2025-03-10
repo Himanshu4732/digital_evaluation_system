@@ -13,6 +13,7 @@ const questionPaperRoutes = require('./routes/questionPaperRoutes')
 const marksRoutes = require('./routes/marksRoutes')
 const questionRoutes = require('./routes/questionRoute')
 const examRoutes = require('./routes/examRoutes.js')
+const subjectRoute = require('./routes/subjectRoute.js')
 
 connectToDb();
 
@@ -36,6 +37,6 @@ app.use('/questionPaper',questionPaperRoutes);
 app.use('/marks',marksRoutes);
 app.use('/question',questionRoutes);
 app.use('/exam',examRoutes);
-// app.use('/section',require('./routes/sectionRoutes'));
+app.use('/subject',subjectRoute);
 
 module.exports = app;
