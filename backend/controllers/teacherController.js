@@ -81,7 +81,13 @@ module.exports.getTeacherProfile = async (req, res, next) => {
 module.exports.assignedPaper = async (req, res, next) => {
   const teacher = await teacherModel
     .findById(req.teacher._id)
-    .populate("assignedPapers");
+    .populate({
+      path: 'assignedPapers',
+      populate: [
+          { path: 'student', model: 'Student' , populate: { path: 'section', model: 'Section' } },
+          { path: 'subject', model: 'Subject' } 
+      ]
+  });
 
   const papers = teacher.assignedPapers;
 
@@ -99,11 +105,12 @@ module.exports.logoutTeacher = async (req, res, next) => {
 
 module.exports.getTeacherDashboard = async (req, res, next) => {
   const teacher = await teacherModel
-    .findById(req.teacher._id)
-    .populate("assignedPapers");
-
+  .findById(req.teacher._id)
+  .populate({
+      path: 'assignedPapers',
+      
+  });
   const papers = teacher.assignedPapers;
 
   res.status(200).json(papers);
 };
-// Compare this snippet from backend/routes/teacherRoutes.js:

@@ -4,6 +4,7 @@ import { Grid, Paper, Typography, Button, IconButton } from "@mui/material";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import StatCard from "../components/StatCard";
+import StatsCard from "./StatsCard";
 
 const TeacherDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -18,6 +19,7 @@ const TeacherDashboard = () => {
           },
         });
         setDashboardData(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching dashboard data", error);
       }
@@ -54,17 +56,9 @@ const TeacherDashboard = () => {
               </Paper>
             </Link>
           </Grid>
-          <Grid item xs={12} md={4}>
-            <Link to="/teacher/profile">
-              <Paper elevation={10} className="p-4" style={{ cursor: "pointer", backgroundColor: "rgb(50,50,50)", alignItems: "center" }}>
-                <h1 className="text-blue-500 uppercase w-full font-semibold">Profile</h1>
-              </Paper>
-            </Link>
-          </Grid>
-
           {/* StatCard Section */}
           <Grid item xs={12} md={8}>
-            <StatCard data={dashboardData} />
+            <StatsCard data={dashboardData} />
           </Grid>
 
         

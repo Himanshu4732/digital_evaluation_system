@@ -162,3 +162,16 @@ exports.getAllAnswerPapers = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+exports.getPaper = async (req, res) => {
+  const id = req.params.answerSheetId;
+  try {
+    const paper = await answerpaperModel.findById(id).populate("subject").populate("exam").populate("student").populate("teacher").populate("marks");
+    if (!paper) {
+      return res.status(404).json({ message: "Paper not found" });
+    }
+    res.status(200).json(paper);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+}

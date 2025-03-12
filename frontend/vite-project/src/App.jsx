@@ -39,7 +39,7 @@ function App() {
         <Route path="/teacherDashboard" element={<TeacherDashboard />} />
         <Route path="/teacher/assigned-papers" element={<AssignedPapers />} />
       
-        <Route path="/teacher/evaluate-paper/:id" element={<EvaluatePaper />} />
+        <Route path="/teacher/evaluate-paper/:answerSheetId" element={<EvaluatePaper />} />
         <Route
           path="/studentDashboard"
           element={

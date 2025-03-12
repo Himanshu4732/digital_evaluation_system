@@ -52,6 +52,8 @@ router.patch(
   answerpaperController.checkanswerPaper
 );
 
+router.get("/:answerSheetId", answerpaperController.getPaper);
+
 router.get("/all", auth.authAdmin, answerpaperController.getAllAnswerPapers);
 
 
