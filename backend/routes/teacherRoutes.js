@@ -38,6 +38,10 @@ router.get('/profile', authMiddleware.authTeacher, teacherController.getTeacherP
 
 router.get('/assignedPaper', authMiddleware.authTeacher, teacherController.assignedPaper);
 
+router.get('/pendingPaper', authMiddleware.authTeacher, teacherController.pendingPaper);
+
+router.get('/checkedPaper', authMiddleware.authTeacher, teacherController.checkedPaper);
+
 //logout route
 router.get('/logout', authMiddleware.authTeacher, teacherController.logoutTeacher);
 

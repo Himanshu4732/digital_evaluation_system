@@ -50,7 +50,15 @@ const TeacherDashboard = () => {
             </Link>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Link to="/teacher/evaluated-papers">
+            <Link to="/teacher/pending-papers"
+            >
+              <Paper elevation={10} className="p-4" style={{ cursor: "pointer", backgroundColor: "rgb(50,50,50)", alignItems: "center" }}>
+                <h1 className="text-blue-500 uppercase w-full font-semibold">Pending papers</h1>
+              </Paper>
+            </Link>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Link to="/teacher/checked-papers">
               <Paper elevation={10} className="p-4" style={{ cursor: "pointer", backgroundColor: "rgb(50,50,50)", alignItems: "center" }}>
                 <h1 className="text-blue-500 uppercase w-full font-semibold">Evaluated Papers</h1>
               </Paper>

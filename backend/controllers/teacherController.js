@@ -93,6 +93,40 @@ module.exports.assignedPaper = async (req, res, next) => {
 
   res.status(200).json(papers);
 };
+module.exports.pendingPaper = async (req, res, next) => {
+  const teacher = await teacherModel
+    .findById(req.teacher._id)
+    .populate({
+      path: 'assignedPapers',
+      match: { status: 'Pending' },
+      populate: [
+        { path: 'student', model: 'Student', populate: { path: 'section', model: 'Section' } },
+        { path: 'subject', model: 'Subject' }
+      ]
+    });
+
+  const papers = teacher.assignedPapers;
+
+  res.status(200).json(papers);
+};
+module.exports.checkedPaper = async (req, res, next) => {
+  const teacher = await teacherModel
+    .findById(req.teacher._id)
+    .populate({
+      path: 'assignedPapers',
+      match: { status: 'Evaluated' },
+      populate: [
+        { path: 'student', model: 'Student', populate: { path: 'section', model: 'Section' } },
+        { path: 'subject', model: 'Subject' }
+      ]
+    });
+
+  const papers = teacher.assignedPapers;
+
+  res.status(200).json(papers);
+};
+
+
 
 module.exports.logoutTeacher = async (req, res, next) => {
   res.clearCookie("token");

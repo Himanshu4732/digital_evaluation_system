@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Grid,
-  IconButton,
-} from "@mui/material";
-import { useParams } from "react-router-dom";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"; // Import back arrow icon
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"; // Import forward arrow icon
+import { Paper, Typography, TextField, Button, Grid, IconButton } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-const EvaluateAnswerSheet = () => {
-  const { answerSheetId } = useParams();
-  const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [marksArray, setMarksArray] = useState([]);
-  const [answerSheetUrl, setAnswerSheetUrl] = useState("");
-  const [marksSubmitted, setMarksSubmitted] = useState(false);
+const UpdateMarks = () => {
+  const { answerSheetId } = useParams(); // Extract answerSheetId from the URL
+  const navigate = useNavigate();
+  const [questions, setQuestions] = useState([]); // List of questions
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Current question index
+  const [marksArray, setMarksArray] = useState([]); // Array to store marks for each question
+  const [answerSheetUrl, setAnswerSheetUrl] = useState(""); // URL of the answer sheet from Cloudinary
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
+  // Fetch the answer sheet and questions
   useEffect(() => {
     const fetchAnswerSheetAndQuestions = async () => {
       try {
+        // Fetch the answer sheet details (including Cloudinary URL)
         const answerSheetResponse = await axios.get(
           `http://localhost:8000/answerpaper/${answerSheetId}`,
           {
@@ -33,18 +29,10 @@ const EvaluateAnswerSheet = () => {
           }
         );
 
-        setAnswerSheetUrl(answerSheetResponse.data.answerSheet);
-        console.log(answerSheetResponse);
-        if (answerSheetResponse.data.status === "Evaluated") {
-          setMarksSubmitted(true);
-        }
+        setAnswerSheetUrl(answerSheetResponse.data.answerSheet); // Assuming the URL is stored in `answerSheet`
+        setMarksArray(answerSheetResponse.data.marksArray || []); // Load existing marks
 
-        // Check if the answer sheet is already evaluated
-        if (answerSheetResponse.data.status === "Evaluated") {
-          setMarksSubmitted(true);
-          setMarksArray(answerSheetResponse.data.marksArray || []); // Load existing marks if already evaluated
-        }
-
+        // Fetch the questions for the answer sheet
         const questionsResponse = await axios.get(
           `http://localhost:8000/questionPaper/67be80e677afddf8c135052b`,
           {
@@ -56,9 +44,10 @@ const EvaluateAnswerSheet = () => {
         );
 
         setQuestions(questionsResponse.data.questions);
-        console.log(questionsResponse.data);
+        setIsLoading(false); // Stop loading
       } catch (error) {
         console.error("Error fetching answer sheet or questions:", error);
+        setIsLoading(false); // Stop loading even if there's an error
       }
     };
 
@@ -73,7 +62,6 @@ const EvaluateAnswerSheet = () => {
       obtainMarks: parseInt(event.target.value, 10),
     };
     setMarksArray(newMarksArray);
-    console.log(marksArray);
   };
 
   // Handle next question
@@ -90,11 +78,11 @@ const EvaluateAnswerSheet = () => {
     }
   };
 
-  // Handle submit marks
-  const handleSubmitMarks = async () => {
+  // Handle update marks
+  const handleUpdateMarks = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/answerpaper/check/${answerSheetId}`,
+        `http://localhost:8000/answerpaper/update-marks/${answerSheetId}`,
         {
           marksArray,
         },
@@ -106,29 +94,29 @@ const EvaluateAnswerSheet = () => {
         }
       );
 
-      alert("Marks submitted successfully!");
-      setMarksSubmitted(true); // Disable editing after submission
+      alert("Marks updated successfully!");
+      navigate("/teacher/dashboard"); // Redirect to the teacher's dashboard
       console.log(response.data);
     } catch (error) {
-      console.error("Error submitting marks:", error);
-      alert("Failed to submit marks.");
+      console.error("Error updating marks:", error);
+      alert("Failed to update marks.");
     }
   };
+
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
 
   return (
     <div className="bg-zinc-800 min-h-screen text-white p-8">
       <Typography variant="h4" className="mb-6 text-blue-400">
-        Evaluate Answer Sheet
+        Update Marks
       </Typography>
 
       <Grid container spacing={4}>
         {/* Left-hand side: Answer Sheet */}
         <Grid item xs={12} md={6}>
-          <Paper
-            elevation={10}
-            style={{ backgroundColor: "#1e1e1e" }}
-            className="p-6"
-          >
+          <Paper elevation={10} style={{ backgroundColor: "#1e1e1e" }} className="p-6">
             <Typography variant="h6" className="text-blue-400 mb-4">
               Answer Sheet
             </Typography>
@@ -136,7 +124,7 @@ const EvaluateAnswerSheet = () => {
               <iframe
                 src={answerSheetUrl}
                 width="100%"
-                height="500px"
+                height="600px"
                 style={{ border: "none" }}
                 title="PDF Viewer"
               />
@@ -146,16 +134,7 @@ const EvaluateAnswerSheet = () => {
 
         {/* Right-hand side: Question and Marks Input */}
         <Grid item xs={12} md={6}>
-          {marksSubmitted && (
-            <Typography variant="h3" className="text-green-400 mb-4 p-5">
-              Marks Submitted
-            </Typography>
-          )}
-          <Paper
-            elevation={10}
-            style={{ backgroundColor: "#1e1e1e" }}
-            className="p-6"
-          >
+          <Paper elevation={10} style={{ backgroundColor: "#1e1e1e" }} className="p-6">
             {/* Navigation Arrows */}
             <div className="flex justify-between items-center mb-4">
               <IconButton
@@ -190,20 +169,16 @@ const EvaluateAnswerSheet = () => {
                   value={marksArray[currentQuestionIndex]?.obtainMarks || ""}
                   onChange={handleMarkChange}
                   className="mb-4"
-                  disabled={marksSubmitted} // Disable input after submission
                 />
 
-                {!marksSubmitted &&
-                  currentQuestionIndex === questions.length - 1 && (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={handleSubmitMarks}
-                      className="w-full"
-                    >
-                      Submit Marks
-                    </Button>
-                  )}
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleUpdateMarks}
+                  className="w-full"
+                >
+                  Update Marks
+                </Button>
               </>
             )}
           </Paper>
@@ -213,4 +188,4 @@ const EvaluateAnswerSheet = () => {
   );
 };
 
-export default EvaluateAnswerSheet;
+export default UpdateMarks;

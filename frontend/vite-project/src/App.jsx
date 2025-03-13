@@ -21,6 +21,9 @@ import AllQuestionPaper from "./pages/AllQuestionPaper";
 import AllAnswerPapers from "./pages/AllAnswerPapers";
 import AssignedPapers from "./teacher/AssignedPapers";
 import EvaluatePaper from "./teacher/EvaluatePaper";
+import PendingPaper from "./teacher/PendingPaper";
+import CheckedPaper from "./teacher/CheckedPapers";
+import UpdateMarks from "./teacher/UpdateMarks";
 
 function App() {
   return (
@@ -37,9 +40,15 @@ function App() {
         <Route path="/all/QuestionPaper" element={<AllQuestionPaper />} />
         <Route path="/question-paper/:id" element={<QuestionPaperDetail />} />
         <Route path="/teacherDashboard" element={<TeacherDashboard />} />
+        
+        <Route path="/teacher/checked-papers" element={<CheckedPaper />} />
+        <Route path="/teacher/update/:answerSheetId" element={<UpdateMarks />} />
         <Route path="/teacher/assigned-papers" element={<AssignedPapers />} />
       
         <Route path="/teacher/evaluate-paper/:answerSheetId" element={<EvaluatePaper />} />
+        <Route path="/teacher/pending-papers" element={<PendingPaper />} />
+
+
         <Route
           path="/studentDashboard"
           element={

@@ -155,6 +155,38 @@ exports.checkanswerPaper = async (req, res) => {
   }
 };
 
+exports.updateMarks = async (req, res) => {
+  try {
+    const { answerSheetId } = req.params;
+    const { marksArray } = req.body;
+
+    console.log(marksArray)
+
+    // Find the answer sheet and update the marks
+    const updatedAnswerSheet = await answerpaperModel.findByIdAndUpdate(
+      answerSheetId,
+      {
+        $set: { marksArray }, // Update the marks array
+        status: "Evaluated", // Set status to evaluated
+        evaluation_date: new Date(), // Update evaluation date
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedAnswerSheet) {
+      return res.status(404).json({ message: "Answer sheet not found" });
+    }
+
+    res.status(200).json({
+      message: "Marks updated successfully",
+      answerSheet: updatedAnswerSheet,
+    });
+  } catch (error) {
+    console.error("Error updating marks:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 exports.getAllAnswerPapers = async (req, res) => {
   try {
     const papers = await answerpaperModel.find().populate("subject").populate("exam").populate("student").populate("teacher").populate("marks");
