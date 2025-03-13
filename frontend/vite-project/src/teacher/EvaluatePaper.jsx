@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Paper, Typography, TextField, Button, Grid } from "@mui/material";
+import { Paper, Typography, TextField, Button, Grid, IconButton } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Document, Page, pdfjs } from "react-pdf"; // Import react-pdf components
-import "react-pdf/dist/esm/Page/AnnotationLayer.css"; // Optional: For text layer styling
-import "react-pdf/dist/esm/Page/TextLayer.css"; // Optional: For annotation layer styling
-
-
-// Use the latest version of PDF.js from the CDN
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"; // Import back arrow icon
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"; // Import forward arrow icon
 
 const EvaluateAnswerSheet = () => {
   const { answerSheetId } = useParams(); // Extract answerSheetId from the URL
@@ -16,8 +11,7 @@ const EvaluateAnswerSheet = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Current question index
   const [marksArray, setMarksArray] = useState([]); // Array to store marks for each question
   const [answerSheetUrl, setAnswerSheetUrl] = useState(""); // URL of the answer sheet from Cloudinary
-  const [numPages, setNumPages] = useState(null); // Total number of pages in the PDF
-  const [pageNumber, setPageNumber] = useState(1); // Current page number
+  const [marksSubmitted, setMarksSubmitted] = useState(false); // Flag to indicate if marks have been submitted
 
   // Fetch the answer sheet and questions
   useEffect(() => {
@@ -36,10 +30,19 @@ const EvaluateAnswerSheet = () => {
 
         setAnswerSheetUrl(answerSheetResponse.data.answerSheet); // Assuming the URL is stored in `answerSheet`
         console.log(answerSheetResponse);
+        if(answerSheetResponse.data.status === "Evaluated") {
+          setMarksSubmitted(true);
+        }
+
+        // Check if the answer sheet is already evaluated
+        if (answerSheetResponse.data.status === "Evaluated") {
+          setMarksSubmitted(true);
+          setMarksArray(answerSheetResponse.data.marksArray || []); // Load existing marks if already evaluated
+        }
 
         // Fetch the questions for the answer sheet
         const questionsResponse = await axios.get(
-          `http://localhost:8000/questions/${answerSheetResponse.data.examId}`,
+          `http://localhost:8000/questionPaper/67be80e677afddf8c135052b`,
           {
             withCredentials: true,
             headers: {
@@ -48,7 +51,8 @@ const EvaluateAnswerSheet = () => {
           }
         );
 
-        setQuestions(questionsResponse.data);
+        setQuestions(questionsResponse.data.questions);
+        console.log(questionsResponse.data);
       } catch (error) {
         console.error("Error fetching answer sheet or questions:", error);
       }
@@ -62,9 +66,10 @@ const EvaluateAnswerSheet = () => {
     const newMarksArray = [...marksArray];
     newMarksArray[currentQuestionIndex] = {
       questionId: questions[currentQuestionIndex]._id,
-      mark: parseInt(event.target.value, 10),
+      obtainMarks: parseInt(event.target.value, 10),
     };
     setMarksArray(newMarksArray);
+    console.log(marksArray);
   };
 
   // Handle next question
@@ -74,15 +79,19 @@ const EvaluateAnswerSheet = () => {
     }
   };
 
+  // Handle previous question
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
   // Handle submit marks
   const handleSubmitMarks = async () => {
     try {
-      const studentId = "studentId"; // Replace with actual student ID from the answer sheet
-      const response = await axios.post(
-        "http://localhost:8000/marks/submit",
+      const response = await axios.patch(
+        `http://localhost:8000/answerpaper/check/${answerSheetId}`,
         {
-          studentId,
-          answerSheetId,
           marksArray,
         },
         {
@@ -94,16 +103,12 @@ const EvaluateAnswerSheet = () => {
       );
 
       alert("Marks submitted successfully!");
+      setMarksSubmitted(true); // Disable editing after submission
       console.log(response.data);
     } catch (error) {
       console.error("Error submitting marks:", error);
       alert("Failed to submit marks.");
     }
-  };
-
-  // Handle PDF load success
-  const onDocumentLoadSuccess = ({ numPages }) => {
-    setNumPages(numPages);
   };
 
   return (
@@ -120,34 +125,13 @@ const EvaluateAnswerSheet = () => {
               Answer Sheet
             </Typography>
             {answerSheetUrl && (
-              <Document
-                file={answerSheetUrl}
-                onLoadSuccess={onDocumentLoadSuccess}
-                loading={<Typography>Loading PDF...</Typography>}
-              >
-                <Page pageNumber={pageNumber} width={500} />
-              </Document>
-            )}
-            {numPages && (
-              <div className="mt-4">
-                <Button
-                  disabled={pageNumber <= 1}
-                  onClick={() => setPageNumber(pageNumber - 1)}
-                  variant="contained"
-                  color="primary"
-                  className="mr-2"
-                >
-                  Previous
-                </Button>
-                <Button
-                  disabled={pageNumber >= numPages}
-                  onClick={() => setPageNumber(pageNumber + 1)}
-                  variant="contained"
-                  color="primary"
-                >
-                  Next
-                </Button>
-              </div>
+              <iframe
+                src={answerSheetUrl}
+                width="100%"
+                height="600px"
+                style={{ border: "none" }}
+                title="PDF Viewer"
+              />
             )}
           </Paper>
         </Grid>
@@ -155,9 +139,26 @@ const EvaluateAnswerSheet = () => {
         {/* Right-hand side: Question and Marks Input */}
         <Grid item xs={12} md={6}>
           <Paper elevation={10} style={{ backgroundColor: "#1e1e1e" }} className="p-6">
-            <Typography variant="h6" className="text-blue-400 mb-4">
-              Question {currentQuestionIndex + 1} of {questions.length}
-            </Typography>
+            {/* Navigation Arrows */}
+            <div className="flex justify-between items-center mb-4">
+              <IconButton
+                onClick={handlePreviousQuestion}
+                disabled={currentQuestionIndex === 0}
+                className="text-blue-400"
+              >
+                <ArrowBackIosIcon />
+              </IconButton>
+              <Typography variant="h6" className="text-blue-400">
+                Question {currentQuestionIndex + 1} of {questions.length}
+              </Typography>
+              <IconButton
+                onClick={handleNextQuestion}
+                disabled={currentQuestionIndex === questions.length - 1}
+                className="text-blue-400"
+              >
+                <ArrowForwardIosIcon />
+              </IconButton>
+            </div>
 
             {questions.length > 0 && (
               <>
@@ -169,17 +170,19 @@ const EvaluateAnswerSheet = () => {
                   fullWidth
                   label="Enter Marks"
                   type="number"
-                  value={marksArray[currentQuestionIndex]?.mark || ""}
+                  value={marksArray[currentQuestionIndex]?.obtainMarks || ""}
                   onChange={handleMarkChange}
                   className="mb-4"
+                  disabled={marksSubmitted} // Disable input after submission
                 />
 
-                {currentQuestionIndex < questions.length - 1 ? (
-                  <Button variant="contained" color="primary" onClick={handleNextQuestion}>
-                    Next Question
-                  </Button>
-                ) : (
-                  <Button variant="contained" color="secondary" onClick={handleSubmitMarks}>
+                {!marksSubmitted && currentQuestionIndex === questions.length - 1 && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleSubmitMarks}
+                    className="w-full"
+                  >
                     Submit Marks
                   </Button>
                 )}

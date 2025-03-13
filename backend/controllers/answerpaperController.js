@@ -115,7 +115,7 @@ exports.checkanswerPaper = async (req, res) => {
 
   console.log(req.body.marks); // Debugging: Log marks to see what's being passed
 
-  const marks = req.body.marks;
+  const marks = req.body.marksArray;
   const answerpaperId = req.params.answerpaperId;
 
   if (!Array.isArray(marks)) {
@@ -144,6 +144,7 @@ exports.checkanswerPaper = async (req, res) => {
       });
 
       paper.marks.push(marksCreate._id);
+      paper.status = "Evaluated";
     }
 
     await paper.save();

@@ -33,19 +33,18 @@ router.patch(
 router.patch(
   "/check/:answerpaperId",
   [
-    auth.authTeacher,
 
     // Validate that "marks" is an array
-    body("marks")
+    body("marksArray")
       .isArray({ min: 1 })
       .withMessage("Marks must be an array and cannot be empty"),
 
     // Validate each item inside the "marks" array
-    body("marks.*.questionId")
+    body("marksArray.*.questionId")
       .notEmpty()
       .withMessage("Each mark must have a questionId"),
 
-    body("marks.*.obtainMarks")
+    body("marksArray.*.obtainMarks")
       .isInt({ min: 0 })
       .withMessage("Marks obtained must be a non-negative integer"),
   ],
