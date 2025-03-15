@@ -51,7 +51,7 @@ router.patch(
   answerpaperController.checkanswerPaper
 );
 
-router.patch("/update-marks/:answerSheetId", answerpaperController.updateMarks);
+router.patch("/update-marks", answerpaperController.updateMarks);
 
 router.get("/:answerSheetId", answerpaperController.getPaper);
 

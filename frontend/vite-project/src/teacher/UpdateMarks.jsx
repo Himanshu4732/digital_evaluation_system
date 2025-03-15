@@ -13,6 +13,7 @@ const UpdateMarks = () => {
   const [marksArray, setMarksArray] = useState([]); // Array to store marks for each question
   const [answerSheetUrl, setAnswerSheetUrl] = useState(""); // URL of the answer sheet from Cloudinary
   const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [updatedMarks, setUpdatedMarks] = useState([]); // Track updated marks
 
   // Fetch the answer sheet and questions
   useEffect(() => {
@@ -30,7 +31,7 @@ const UpdateMarks = () => {
         );
 
         setAnswerSheetUrl(answerSheetResponse.data.answerSheet); // Assuming the URL is stored in `answerSheet`
-        setMarksArray(answerSheetResponse.data.marksArray || []); // Load existing marks
+        setMarksArray(answerSheetResponse.data.marks || []); // Load existing marks
 
         // Fetch the questions for the answer sheet
         const questionsResponse = await axios.get(
@@ -57,11 +58,29 @@ const UpdateMarks = () => {
   // Handle mark input change
   const handleMarkChange = (event) => {
     const newMarksArray = [...marksArray];
-    newMarksArray[currentQuestionIndex] = {
-      questionId: questions[currentQuestionIndex]._id,
+    const updatedMark = {
+      id: newMarksArray[currentQuestionIndex]._id, // Include the mark ID
       obtainMarks: parseInt(event.target.value, 10),
     };
+
+    // Update the marks array
+    newMarksArray[currentQuestionIndex].marksObtained = updatedMark.obtainMarks;
     setMarksArray(newMarksArray);
+
+    // Track updated marks
+    const existingUpdateIndex = updatedMarks.findIndex(
+      (mark) => mark.id === updatedMark.id
+    );
+    if (existingUpdateIndex !== -1) {
+      // Update existing entry
+      const newUpdatedMarks = [...updatedMarks];
+      newUpdatedMarks[existingUpdateIndex] = updatedMark;
+      setUpdatedMarks(newUpdatedMarks);
+    } else {
+      // Add new entry
+      setUpdatedMarks([...updatedMarks, updatedMark]);
+    }
+    console.log(updatedMarks);
   };
 
   // Handle next question
@@ -82,9 +101,9 @@ const UpdateMarks = () => {
   const handleUpdateMarks = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/answerpaper/update-marks/${answerSheetId}`,
+        `http://localhost:8000/answerpaper/update-marks`,
         {
-          marksArray,
+          updatedMarks, // Send only the updated marks
         },
         {
           withCredentials: true,
@@ -166,9 +185,18 @@ const UpdateMarks = () => {
                   fullWidth
                   label="Enter Marks"
                   type="number"
-                  value={marksArray[currentQuestionIndex]?.obtainMarks || ""}
+                  value={marksArray[currentQuestionIndex]?.marksObtained || ""}
                   onChange={handleMarkChange}
                   className="mb-4"
+                  InputProps={{
+                    style: {
+                      backgroundColor: updatedMarks.some(
+                        (mark) => mark.id === marksArray[currentQuestionIndex]?._id
+                      )
+                        ? "#4CAF50" // Green background for updated marks
+                        : "inherit", // Default background
+                    },
+                  }}
                 />
 
                 <Button

@@ -115,7 +115,7 @@ exports.checkanswerPaper = async (req, res) => {
 
   console.log(req.body.marks); // Debugging: Log marks to see what's being passed
 
-  const marks = req.body.marksArray;
+  const marks = req.body.updatedMarks;
   const answerpaperId = req.params.answerpaperId;
 
   if (!Array.isArray(marks)) {
@@ -157,30 +157,28 @@ exports.checkanswerPaper = async (req, res) => {
 
 exports.updateMarks = async (req, res) => {
   try {
-    const { answerSheetId } = req.params;
-    const { marksArray } = req.body;
+    const { updatedMarks } = req.body;
 
-    console.log(marksArray)
+    if (!Array.isArray(updatedMarks)) {
+      return res.status(400).json({ message: "Marks must be an array" });
+    }
+    
 
-    // Find the answer sheet and update the marks
-    const updatedAnswerSheet = await answerpaperModel.findByIdAndUpdate(
-      answerSheetId,
-      {
-        $set: { marksArray }, // Update the marks array
-        status: "Evaluated", // Set status to evaluated
-        evaluation_date: new Date(), // Update evaluation date
-      },
-      { new: true } // Return the updated document
-    );
+    for (const mark of updatedMarks) {
+      const existingMark = await marksModel.findById(mark.id);
+      if (!existingMark) {
+      return res.status(404).json({ message: `Mark with ID ${mark.markId} not found` });
+      }
 
-    if (!updatedAnswerSheet) {
-      return res.status(404).json({ message: "Answer sheet not found" });
+      if (mark.obtainMarks < 0) {
+      return res.status(400).json({ message: "Marks cannot be negative" });
+      }
+
+      existingMark.marksObtained = mark.obtainMarks;
+      await existingMark.save();
     }
 
-    res.status(200).json({
-      message: "Marks updated successfully",
-      answerSheet: updatedAnswerSheet,
-    });
+    res.status(200).json({ message: "Marks updated successfully" });
   } catch (error) {
     console.error("Error updating marks:", error);
     res.status(500).json({ message: "Server error", error: error.message });
