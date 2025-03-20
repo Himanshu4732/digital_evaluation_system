@@ -55,7 +55,7 @@ router.patch("/update-marks", answerpaperController.updateMarks);
 
 router.get("/:answerSheetId", answerpaperController.getPaper);
 
-router.get("/all", auth.authAdmin, answerpaperController.getAllAnswerPapers);
+router.get("/allAnswerPaper", answerpaperController.getAllAnswerPapers);
 
 
 

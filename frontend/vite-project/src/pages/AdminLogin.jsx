@@ -61,6 +61,7 @@ const AdminLogin = () => {
                             className="bg-zinc-200 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base placeholder:text-zinc-700 text-black"
                             type="email"
                             placeholder="email@example.com"
+                            autoComplete="username"
                         />
 
                         <h3 className="text-lg font-medium mb-2">Enter Password</h3>
@@ -74,6 +75,7 @@ const AdminLogin = () => {
                             required
                             type="password"
                             placeholder="password"
+                            autoComplete="current-password"
                         />
 
                         <button className="bg-zinc-900 text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base">

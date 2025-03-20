@@ -14,7 +14,7 @@ const AllAnswerPapers = () => {
   // Fetch all answer papers
   const fetchAnswerPapers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/answerpaper/all", {
+      const response = await axios.get("http://localhost:8000/answerpaper/allAnswerPaper", {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

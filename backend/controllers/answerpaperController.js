@@ -28,7 +28,7 @@ exports.createanswerPaper = async (req, res) => {
       return res.status(404).json({ message: "Exam not found" });
     }
 
-    const subjectId = await subjectModel.findOne({ subjectname: subject });
+    const subjectId = await subjectModel.findOne({ subjectName: subject });
 
     if (!subjectId) {
       return res.status(404).json({ message: "Subject not found" });
@@ -187,10 +187,11 @@ exports.updateMarks = async (req, res) => {
 
 exports.getAllAnswerPapers = async (req, res) => {
   try {
-    const papers = await answerpaperModel.find().populate("subject").populate("exam").populate("student").populate("teacher").populate("marks");
+    
+    const papers = await answerpaperModel.find().populate("subject").populate("exam").populate("student");
     res.status(200).json(papers);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ message: "Server errorrr", error: error.message });
   }
 };
 

@@ -26,10 +26,11 @@ const answerpaperSchema = new mongoose.Schema({
         ref: 'Marks'
     }
     ],
-    obtained_marks: {
-        type: Number
-    },
+    
     elavuation_date: {
+        type: Date
+    },
+    assigned_date: {
         type: Date
     },
         feedback: {
