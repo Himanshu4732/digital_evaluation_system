@@ -3,14 +3,16 @@ const router = express.Router();
 const { body } = require("express-validator");
 const adminController = require("../controllers/adminController");
 const authMiddleware = require("../middlewares/authMiddleware");
+const { upload } = require("../middlewares/multerMiddleware");
 
 router.post(
   "/register",
+  upload.single("avatar"),
   [
     body("email").isEmail().withMessage("Invalid Email"),
     body("name")
       .isLength({ min: 3 })
-      .withMessage("First name should be 3 characters long"),
+      .withMessage("name should be 3 characters long"),
     body("password")
       .isLength({ min: 3 })
       .withMessage("Password should be at least 3 characters long"),
@@ -36,7 +38,5 @@ router.get('/dashboard', authMiddleware.authAdmin, adminController.getDashboard)
 
 //logout
 router.get('/logout', authMiddleware.authAdmin, adminController.logoutAdmin);
-
-
 
 module.exports = router;

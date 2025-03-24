@@ -1,97 +1,77 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
-import { AdminDataContext } from "../context/AdminContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AdminDataContext } from "../context/AdminContext";
 
 const AdminLogin = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const { admin, setAdmin } = useContext(AdminDataContext);
-    const navigate = useNavigate();
+  const { admin, setAdmin } = useContext(AdminDataContext);
+  const navigate = useNavigate();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+  const submitHandler = async (e) => {
+    e.preventDefault();
 
-        const AdminData = {
-            email: email,
-            password: password,
-        };
-
-        const response = await axios.post(
-            `http://localhost:8000/admin/login`,
-            AdminData
-        );
-
-        if (response.status === 200) {
-            const data = response.data;
-            console.log(data.admin);
-            setAdmin({
-                email: data.admin.email,
-                name: data.admin.name,
-              });
-            console.log(admin)
-            localStorage.setItem("token", data.token);
-            navigate("/adminDashboard");
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/admin/login",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
+      );
 
-        setEmail("");
-        setPassword("");
-    };
+      if (response.status === 200) {
+        const data = response.data;
+        setAdmin(data.admin);
+        localStorage.setItem("token", data.token);
+        navigate("/adminDashboard");
+      }
+    } catch (error) {
+      console.error("Error during admin login:", error);
+    }
 
-    return (
-        <div className="h-screen w-full flex items-center justify-center bg-zinc-700">
-            <div className="p-7 h-auto flex flex-col justify-center items-center border-0 border-gray-200 rounded-lg bg-zinc-800 text-white">
-                <div className="p-7 pt-0 flex flex-col justify-between">
-                    <h2 className="w-full items-center text-3xl font-bold mb-5">Admin Login</h2>
+    setEmail("");
+    setPassword("");
+  };
 
-                    <form
-                        onSubmit={(e) => {
-                            submitHandler(e);
-                        }}
-                    >
-                        <h3 className="text-lg font-medium mb-2">What's your email</h3>
-                        <input
-                            required
-                            value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
-                            }}
-                            className="bg-zinc-200 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base placeholder:text-zinc-700 text-black"
-                            type="email"
-                            placeholder="email@example.com"
-                            autoComplete="username"
-                        />
+  return (
+    <div className="h-screen w-full flex items-center justify-center bg-zinc-900">
+      <div className="p-7 h-3-4 flex flex-col justify-between bg-zinc-700 border-2 border-gray-800 rounded-lg">
+        <div>
+          <h2 className="text-2xl font-bold mb-5">Admin Login</h2>
+          <form onSubmit={submitHandler}>
+            <h3 className="text-md font-medium mb-2">What's your email</h3>
+            <input
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-[#eeeeee] mb-3 rounded-lg px-4 py-1 border w-full text-md placeholder:text-base"
+              type="email"
+              placeholder="email@example.com"
+            />
 
-                        <h3 className="text-lg font-medium mb-2">Enter Password</h3>
+            <h3 className="text-md font-medium mb-2">Enter Password</h3>
+            <input
+              className="bg-[#eeeeee] mb-3 rounded-lg px-4 py-1 border w-full text-md placeholder:text-base"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              type="password"
+              placeholder="password"
+            />
 
-                        <input
-                            className="bg-zinc-200 mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base placeholder:text-zinc-700 text-black"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                            }}
-                            required
-                            type="password"
-                            placeholder="password"
-                            autoComplete="current-password"
-                        />
-
-                        <button className="bg-zinc-900 text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base">
-                            Login
-                        </button>
-                    </form>
-                    <p className="text-center">
-                        New here?{" "}
-                        <Link to="/admin/signup" className="text-blue-600">
-                            Create new Account
-                        </Link>
-                    </p>
-                </div>
-            </div>
+            <button className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-1 w-full text-md placeholder:text-base">
+              Login
+            </button>
+          </form>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default AdminLogin;

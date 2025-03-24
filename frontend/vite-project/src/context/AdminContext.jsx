@@ -1,22 +1,18 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState } from 'react';
 
-export const AdminDataContext = createContext()
-
+export const AdminDataContext = createContext();
 
 const AdminContext = ({ children }) => {
+  const [admin, setAdmin] = useState({
+    email: '',
+    name: '',
+  });
 
-    const [ admin, setAdmin ] = useState({
-        email:'',
-        name:'',
-    })
+  return (
+    <AdminDataContext.Provider value={{ admin, setAdmin }}>
+      {children}
+    </AdminDataContext.Provider>
+  );
+};
 
-    return (
-        <div>
-            <AdminDataContext.Provider value={{ admin, setAdmin }}>
-                {children}
-            </AdminDataContext.Provider>
-        </div>
-    )
-}
-
-export default AdminContext
+export default AdminContext;

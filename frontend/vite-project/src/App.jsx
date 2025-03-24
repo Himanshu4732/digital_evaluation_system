@@ -24,10 +24,11 @@ import EvaluatePaper from "./teacher/EvaluatePaper";
 import PendingPaper from "./teacher/PendingPaper";
 import CheckedPaper from "./teacher/CheckedPapers";
 import UpdateMarks from "./teacher/UpdateMarks";
+import AdminContext from "./context/AdminContext"; // Import AdminContext
 
 function App() {
   return (
-    <div>
+    <AdminContext> {/* Wrap the entire application with AdminContext */}
       <Routes>
         <Route path="/student/login" element={<StudentLogin />} />
         <Route path="/student/signup" element={<StudentSignup />} />
@@ -65,14 +66,6 @@ function App() {
             </AdminProtectWrapper>
           }
         />
-        {/* <Route
-          path="/teacherDashboard"
-          element={
-            <TeacherProtectWrapper>
-              <TeacherDashboard />
-            </TeacherProtectWrapper>
-          }
-        /> */}
         <Route
           path="/student/logout"
           element={
@@ -98,7 +91,7 @@ function App() {
           }
         />
       </Routes>
-    </div>
+    </AdminContext>
   );
 }
 

@@ -35,7 +35,7 @@ const AdminDashboard = () => {
 
   if (!dashboardData) {
     return (
-      <div className="flex justify-center items-center h-screen bg-zinc-800 text-white">
+      <div className="flex justify-center -center h-screen bg-zinc-800 text-white">
         Loading...
       </div>
     );
@@ -48,22 +48,22 @@ const AdminDashboard = () => {
         <Grid2 container spacing={3} columns={12}>
           {/* Fileupload Section */}
           <Grid2   spacing={1} size={4} container columns={4}>
-            <Grid2 items size={2}>
+            <Grid2  size={2}>
             <Fileupload />
             </Grid2>
-            <Grid2 items size={2}>
+            <Grid2  size={2}>
             <FileUploadAnswerPaper />
             </Grid2>
-            <Grid2 items size={2}>
+            <Grid2  size={2}>
             <Link to="/all/Questionpaper">
-              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", alignItems: "center"}}>
+              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", align: "center"}}>
                 <h1 className="text-blue-500 uppercase w-full font-semibold">All Question papers</h1>
               </Paper>
               </Link>
             </Grid2>
-            <Grid2 items size={2}>
+            <Grid2  size={2}>
             <Link to="/all/Answerpapers">
-              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", alignItems: "center"}}>
+              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", align: "center"}}>
                 <h1 className="text-blue-500 uppercase w-full font-semibold">All Answer papers</h1>
               </Paper>
               </Link>

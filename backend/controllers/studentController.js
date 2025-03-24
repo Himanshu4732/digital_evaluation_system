@@ -15,7 +15,7 @@ module.exports.registerStudent = async (req, res, next) => {
 
   const isStudentAlready = await studentModel.findOne({ email });
 
-  const sectionId = await sectionModel.findOne({ name: section });
+  const sectionId = await sectionModel.findOne({ sectionName: section });
 
   if (!sectionId) {
     return res.status(404).json({ message: "Section not found" });

@@ -9,7 +9,7 @@ router.post(
   "/create",
   upload.single("answerSheet"),
   [
-    auth.authAdmin,
+    
     body("subject").notEmpty().withMessage("subject is required"),
     body("total_marks")
       .notEmpty()
@@ -21,6 +21,8 @@ router.post(
   ],
   answerpaperController.createanswerPaper
 );
+
+router.get("/allAnswerPaper", answerpaperController.getAllAnswerPapers);
 
 // assigning answerpaper to teacher for checking
 router.patch(
@@ -54,8 +56,6 @@ router.patch(
 router.patch("/update-marks", answerpaperController.updateMarks);
 
 router.get("/:answerSheetId", answerpaperController.getPaper);
-
-router.get("/allAnswerPaper", answerpaperController.getAllAnswerPapers);
 
 
 

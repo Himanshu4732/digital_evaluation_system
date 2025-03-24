@@ -7,6 +7,7 @@ const feedbackModel = require('../models/feedbackModel');
 const adminServer = require('../services/adminServer');
 const { validationResult } = require('express-validator');
 const blackListTokenModel = require('../models/blackListTokenModel');
+const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
 
 module.exports.registerAdmin = async (req, res, next) => {
 
@@ -20,22 +21,42 @@ module.exports.registerAdmin = async (req, res, next) => {
     const isAdminAlready = await adminModel.findOne({ email });
 
     if (isAdminAlready) {
-        return res.status(400).json({ message: 'Admin already exist' });
+        return res.status(400).json({ message: 'Admin already exists' });
     }
 
-    const hashedPassword = await adminModel.hashPassword(password);
+    const avatar = req.file;
 
-    const admin = await adminServer.createAdmin({
-        name,
-        email,
-        password: hashedPassword
-    });
+    try {
+        let avatarUrl = null;
 
-    const token = admin.generateAuthToken();
+        if (avatar) {
+            // Upload avatar to Cloudinary
+            const avatarUploadResponse = await uploadOnCloudinary(avatar.path);
+            if (avatarUploadResponse && avatarUploadResponse.url) {
+                avatarUrl = avatarUploadResponse.url;
+            } else {
+                return res.status(500).json({ message: "Failed to upload avatar" });
+            }
+        }
 
-    res.status(201).json({ token, admin });
+        const hashedPassword = await adminModel.hashPassword(password);
 
+        const admin = new adminModel({
+            name,
+            email,
+            avatar: avatarUrl,
+            password: hashedPassword,
+        });
 
+        await admin.save();
+
+        const token = admin.generateAuthToken();
+
+        res.status(201).json({ token, admin, avatarUrl });
+    } catch (error) {
+        console.error("Error during admin registration:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
 }
 
 module.exports.loginAdmin = async (req, res, next) => {

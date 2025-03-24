@@ -8,13 +8,15 @@ import StudentContext from "./context/StudentContext.jsx";
 import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")).render(
-  <AdminContext>
-    <TeacherContext>
-      <StudentContext>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </StudentContext>
-    </TeacherContext>
-  </AdminContext>
+  <StrictMode>
+    <AdminContext>
+      <TeacherContext>
+        <StudentContext>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </StudentContext>
+      </TeacherContext>
+    </AdminContext>
+  </StrictMode>
 );

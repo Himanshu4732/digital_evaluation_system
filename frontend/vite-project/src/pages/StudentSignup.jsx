@@ -28,6 +28,8 @@ const StudentSignup = () => {
     formData.append('semester', semester);
     formData.append('avatar', avatar);
 
+    
+
     try {
       const response = await axios.post('http://localhost:8000/student/register', formData, {
         headers: {
