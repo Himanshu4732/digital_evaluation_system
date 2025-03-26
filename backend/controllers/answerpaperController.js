@@ -2,12 +2,11 @@ const answerpaperModel = require("../models/answerpaperModel");
 const { validationResult } = require("express-validator");
 const studentModel = require("../models/studentModel");
 const teacherModel = require("../models/teacherModel");
-const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
 const marksModel = require("../models/marksModel");
 const examModel = require("../models/examModel");
 const subjectModel = require("../models/subjectModel");
 
-exports.createanswerPaper = async (req, res) => {
+exports.createAnswerPaper = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -40,12 +39,7 @@ exports.createanswerPaper = async (req, res) => {
       return res.status(400).json({ message: "PDF file is required" });
     }
 
-    console.log("Uploading file to Cloudinary:", pdf.path); // Log the file path
-    console.log("File MIME type:", pdf.mimetype); // Log the MIME type
-
-    const answerUploadResponse = await uploadOnCloudinary(pdf.path, pdf.mimetype);
-
-    const answerSheetUrl = answerUploadResponse.url;
+    const answerSheetUrl = pdf.location; // S3 URL
 
     const newPaper = new answerpaperModel({
       subject: subjectId._id,
@@ -60,7 +54,7 @@ exports.createanswerPaper = async (req, res) => {
     await studentDetail.save();
     res.status(201).json({ message: "Paper created successfully", paper: newPaper });
   } catch (error) {
-    console.error("Error in createanswerPaper:", error); // Log the error
+    console.error("Error in createAnswerPaper:", error); // Log the error
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -81,8 +75,6 @@ exports.assignanswerPaper = async (req, res) => {
       return res.status(404).json({ message: "Paper not found" });
     }
 
-
-
     const teacher = await teacherModel.findOne({ email: teacherEmail });
 
     if (!teacher) {
@@ -97,8 +89,6 @@ exports.assignanswerPaper = async (req, res) => {
       teacher.assignedPapers.push(paper._id);
       await teacher.save();
     }
-
-
 
     res.status(200).json({ message: "Paper assigned successfully", paper });
   } catch (error) {
@@ -162,16 +152,15 @@ exports.updateMarks = async (req, res) => {
     if (!Array.isArray(updatedMarks)) {
       return res.status(400).json({ message: "Marks must be an array" });
     }
-    
 
     for (const mark of updatedMarks) {
       const existingMark = await marksModel.findById(mark.id);
       if (!existingMark) {
-      return res.status(404).json({ message: `Mark with ID ${mark.markId} not found` });
+        return res.status(404).json({ message: `Mark with ID ${mark.markId} not found` });
       }
 
       if (mark.obtainMarks < 0) {
-      return res.status(400).json({ message: "Marks cannot be negative" });
+        return res.status(400).json({ message: "Marks cannot be negative" });
       }
 
       existingMark.marksObtained = mark.obtainMarks;

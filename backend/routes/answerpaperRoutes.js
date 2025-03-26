@@ -19,7 +19,7 @@ router.post(
     body("exam").notEmpty().withMessage("exam is required"),
     body("subject").notEmpty().withMessage("subject is required"),
   ],
-  answerpaperController.createanswerPaper
+  answerpaperController.createAnswerPaper
 );
 
 router.get("/allAnswerPaper", answerpaperController.getAllAnswerPapers);
