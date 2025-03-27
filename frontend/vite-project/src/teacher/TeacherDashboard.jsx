@@ -70,8 +70,21 @@ const TeacherDashboard = () => {
     
       // Filter papers assigned today
       const todaysAssignedPapers = data.filter((item) => {
-        const assignedDate = new Date(item.assigned_date).toISOString().split("T")[0]; // Format assigned_date as YYYY-MM-DD
-        return assignedDate === todaysDateString; // Compare dates
+        if (!item.assigned_date) return false; // Skip if no date exists
+        
+        // Handle both Date objects and ISO strings from MongoDB
+        const assignedDate = item.assigned_date instanceof Date 
+          ? item.assigned_date 
+          : new Date(item.assigned_date);
+        
+        // Check if date is valid
+        if (isNaN(assignedDate.getTime())) return false;
+        
+        // Format both dates as YYYY-MM-DD for comparison
+        const assignedDateStr = assignedDate.toISOString().split('T')[0];
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        return assignedDateStr === todayStr;
       });
     
       return todaysAssignedPapers;

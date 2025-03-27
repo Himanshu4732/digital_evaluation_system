@@ -103,11 +103,11 @@ exports.checkanswerPaper = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  console.log(req.body.marks); // Debugging: Log marks to see what's being passed
-
-  const marks = req.body.updatedMarks;
+  
+  const marks = req.body.marksArray;
   const answerpaperId = req.params.answerpaperId;
-
+  
+  console.log(req.body.marks);
   if (!Array.isArray(marks)) {
     return res.status(400).json({ message: "Marks must be an array" });
   }

@@ -138,8 +138,13 @@ module.exports.logoutTeacher = async (req, res, next) => {
 };
 
 module.exports.getTeacherDashboard = async (req, res, next) => {
+
+  const id = req.teacher._id;
+  if(!id){
+    return res.status(400).json({message: "Teacher not found"});
+  }
   const teacher = await teacherModel
-  .findById(req.teacher._id)
+  .findById(id)
   .populate({
       path: 'assignedPapers',
       

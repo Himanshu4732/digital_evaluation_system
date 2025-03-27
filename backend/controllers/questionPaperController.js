@@ -12,15 +12,16 @@ exports.createQuestionPaper = async (req, res) => {
     }
 
     const { subject, exam, total_marks } = req.body;
+    console.log(subject, exam, total_marks);
+    
+    const examname = await examModel.findOne({ name : exam });
+    
 
-
- const examId = await examModel.findOne({ name : exam });
-
-    if (!examId) {
+    if (!examname) {
       return res.status(404).json({ message: "Exam not found" });
     }
 
-    const subjectId = await subjectModel.findOne({ name : subject });
+    const subjectId = await subjectModel.findOne({ subjectName : subject });
 
     if (!subjectId) {
       return res.status(404).json({ message: "Subject not found" });
@@ -29,7 +30,7 @@ exports.createQuestionPaper = async (req, res) => {
     try {
         const questionPaper = new QuestionPaper({
             subject: subjectId._id,
-            exam,
+            exam : examname._id,
             total_marks: total_marks,
         });
 
