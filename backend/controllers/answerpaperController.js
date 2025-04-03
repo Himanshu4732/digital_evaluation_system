@@ -82,6 +82,7 @@ exports.assignanswerPaper = async (req, res) => {
     }
 
     paper.teacher = teacher._id;
+    paper.assigned_date = new Date(); // 
     paper.status = "Pending";
     await paper.save();
 
@@ -135,6 +136,7 @@ exports.checkanswerPaper = async (req, res) => {
 
       paper.marks.push(marksCreate._id);
       paper.status = "Evaluated";
+      paper.elavuation_date = new Date(); 
     }
 
     await paper.save();

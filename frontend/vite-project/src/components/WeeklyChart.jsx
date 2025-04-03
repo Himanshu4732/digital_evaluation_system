@@ -8,7 +8,7 @@ const WeeklyChart = ({ data }) => {
       <Typography variant="h6" className="text-blue-500 mb-4">
         Weekly Performance
       </Typography>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={420}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="day" />

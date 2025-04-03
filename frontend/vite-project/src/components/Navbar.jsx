@@ -10,7 +10,7 @@ const Navbar = () => {
   }, [admin]);
 
   return (
-    <nav className="bg-zinc-900/75 p-4 text-white shadow-lg fixed top-0 left-0 w-full backdrop-filter backdrop-blur-lg z-50">
+    <nav className="bg-zinc-900/75 p-4 text-white shadow-lg fixed top-0 left-0 w-screen backdrop-filter backdrop-blur-lg">
       <ul className="flex justify-between items-center">
         <li>
           <Link to="/adminDashboard" className="p-4 text-3xl font-bold cursor-pointer">

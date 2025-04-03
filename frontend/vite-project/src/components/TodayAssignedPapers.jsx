@@ -2,7 +2,9 @@ import React from "react";
 import { Paper, Typography, List, ListItem, ListItemText } from "@mui/material";
 
 const TodaysAssignedPapers = ({ data }) => {
+  console.log("Today's Assigned Papers Data:", data); // Log the data prop to check its value
   return (
+
     <Paper elevation={10} className="p-4" style={{ backgroundColor: "rgb(50,50,50)" }}>
       <Typography variant="h6" className="text-blue-500 mb-4">
         Today's Assigned Papers

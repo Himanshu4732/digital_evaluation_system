@@ -21,7 +21,6 @@ router.delete(
     questionController.deleteQuestion
 );
 
-//update question
 router.put(
     '/update/:id',
     questionController.updateQuestion
