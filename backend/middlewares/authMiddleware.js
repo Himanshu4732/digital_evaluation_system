@@ -78,6 +78,7 @@ module.exports.authStudent = async (req, res, next) => {
         const student = await studentModel.findById(decoded._id);
 
         req.student = student;
+        
 
         return next();
     } catch (err) {

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import StudentLogin from "./pages/StudentLogin";
 import StudentSignup from "./pages/StudentSignup";
 import StudentProtectWrapper from "./components/StudentProtectWrapper";
-import StudentDashboard from "./pages/StudentDashboard";
+import StudentDashboard from "./student/StudentDashboard";
 import StudentLogout from "./pages/StudentLogout";
 import TeacherProtectWrapper from "./components/TeacherProtectionWrapper";
 import TeacherLogin from "./pages/TeacherLogin";
@@ -25,6 +25,7 @@ import PendingPaper from "./teacher/PendingPaper";
 import CheckedPaper from "./teacher/CheckedPapers";
 import UpdateMarks from "./teacher/UpdateMarks";
 import AdminContext from "./context/AdminContext"; // Import AdminContext
+import ViewAnswerpaper from "./student/viewAnswerpaper";
 
 function App() {
   return (
@@ -90,6 +91,13 @@ function App() {
             </TeacherProtectWrapper>
           }
         />
+        <Route
+          path="/student/subject/:answerSheetId"
+          element={
+            <ViewAnswerpaper  />
+          }
+        />
+          
       </Routes>
     </AdminContext>
   );

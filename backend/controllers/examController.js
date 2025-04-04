@@ -1,4 +1,5 @@
 const Exam = require('../models/examModel');
+const Student = require('../models/studentModel');
 
 // filepath: /c:/Users/himan/OneDrive/Desktop/digitalEvaluationSystem/backend/controllers/examController.js
 
@@ -36,3 +37,30 @@ exports.getAllExams = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+exports.getExamData = async (req, res) => {
+    try {
+        const studentId = req.student._id; 
+        const { examId } = req.params;
+
+        
+    
+        const student = await Student.findById(studentId)
+          .populate({
+            path: 'answerpapers',
+            match: { exam: examId },
+            populate: [
+                { path: 'subject', select: 'subjectName' }
+              ]
+          });
+    
+        if (!student) {
+          return res.status(404).json({ message: 'Student not found' });
+        }
+    
+        res.json(student.answerpapers);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+      }
+}
