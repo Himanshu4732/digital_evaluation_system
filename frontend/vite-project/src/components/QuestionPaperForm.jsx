@@ -10,10 +10,9 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
     questions: [],
   });
 
-  const [subjects, setSubjects] = useState([]); // List of subjects for suggestions
-  const [exams, setExams] = useState([]); // List of exams for suggestions
+  const [subjects, setSubjects] = useState([]);
+  const [exams, setExams] = useState([]);
 
-  // Fetch subjects and exams for suggestions
   useEffect(() => {
     const fetchSubjectsAndExams = async () => {
       try {
@@ -23,7 +22,6 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        console.log(subjectsResponse.data);
         setSubjects(subjectsResponse.data);
 
         const examsResponse = await axios.get("http://localhost:8000/exam/all", {
@@ -32,7 +30,6 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        console.log(examsResponse.data);
         setExams(examsResponse.data);
       } catch (error) {
         console.error("Error fetching subjects or exams", error);
@@ -54,19 +51,49 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      fetchQuestionPapers(); // Refresh the list of question papers
-      handleClose(); // Close the form
+      fetchQuestionPapers();
+      handleClose();
     } catch (error) {
       console.error("Error creating question paper", error);
     }
   };
 
+  const darkThemeStyles = {
+    dialog: {
+      backgroundColor: "rgb(50,50,50)",
+    },
+    textField: {
+      backgroundColor: "rgb(60,60,60)",
+      color: "white",
+      "& .MuiInputBase-input": {
+        color: "white",
+      },
+      "& .MuiInputLabel-root": {
+        color: "rgba(255,255,255,0.7)",
+      },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "rgba(255,255,255,0.3)",
+        },
+        "&:hover fieldset": {
+          borderColor: "rgba(255,255,255,0.5)",
+        },
+      },
+    },
+    button: {
+      color: "white",
+      backgroundColor: "rgb(40,40,40)",
+      "&:hover": {
+        backgroundColor: "rgba(255,255,255,0.1)",
+      },
+    },
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Create New Question Paper</DialogTitle>
+    <Dialog open={open} onClose={handleClose} PaperProps={{ style: darkThemeStyles.dialog }}>
+      <DialogTitle style={{ color: "white" }}>Create New Question Paper</DialogTitle>
       <DialogContent>
-        {/* Subject Autocomplete */}
-        <Autocomplete
+        <Autocomplete 
           options={subjects}
           getOptionLabel={(subject) => subject.subjectName || ""}
           value={formData.subject}
@@ -78,11 +105,11 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
               label="Subject"
               fullWidth
               margin="normal"
+              sx={darkThemeStyles.textField}
             />
           )}
         />
 
-        {/* Exam Autocomplete */}
         <Autocomplete
           options={exams}
           getOptionLabel={(exam) => exam.name || ""}
@@ -95,11 +122,11 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
               label="Exam"
               fullWidth
               margin="normal"
+              sx={darkThemeStyles.textField}
             />
           )}
         />
 
-        {/* Total Marks */}
         <TextField
           name="total_marks"
           label="Total Marks"
@@ -107,13 +134,12 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
           margin="normal"
           value={formData.total_marks}
           onChange={(e) => handleInputChange(e, e.target.value, "total_marks")}
+          sx={darkThemeStyles.textField}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit} color="primary">
-          Create
-        </Button>
+        <Button onClick={handleClose} sx={darkThemeStyles.button} >Cancel</Button>
+        <Button onClick={handleSubmit} sx={darkThemeStyles.button}>Create</Button>
       </DialogActions>
     </Dialog>
   );

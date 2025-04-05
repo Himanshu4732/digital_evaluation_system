@@ -139,7 +139,7 @@ module.exports.logoutTeacher = async (req, res, next) => {
 
 module.exports.getTeacherDashboard = async (req, res, next) => {
 
-  const id = req.teacher._id;
+  const id = req.teacherId;
   if(!id){
     return res.status(400).json({message: "Teacher not found"});
   }
@@ -150,6 +150,5 @@ module.exports.getTeacherDashboard = async (req, res, next) => {
       
   });
   const papers = teacher.assignedPapers;
-
   res.status(200).json(papers);
 };

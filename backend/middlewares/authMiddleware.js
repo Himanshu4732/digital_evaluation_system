@@ -47,11 +47,11 @@ module.exports.authTeacher = async (req, res, next) => {
     }
 
     try {
-
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const teacher = await teacherModel.findById(decoded._id)
 
         req.teacher = teacher;
+        req.teacherId = decoded._id;
 
         return next();
 

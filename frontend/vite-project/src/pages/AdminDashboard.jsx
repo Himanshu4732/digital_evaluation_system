@@ -42,41 +42,58 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="bg-zinc-800 w-full h-screen text-white overflow-y-auto">
+    <div className="bg-zinc-800 w-full h-screen text-white overflow-y-auto no-scrollbar" >
       <Navbar />
       <div className="dashboard-container p-8 pb-4 py-40">
         <Grid2 container spacing={3} columns={12}>
           {/* Fileupload Section */}
-          <Grid2   spacing={1} size={4} container columns={4}>
-            <Grid2  size={2}>
-            <Fileupload />
+          <Grid2 spacing={1} size={4} container columns={4}>
+            <Grid2 size={2}>
+              <Fileupload />
             </Grid2>
-            <Grid2  size={2}>
-            <FileUploadAnswerPaper />
+            <Grid2 size={2}>
+              <FileUploadAnswerPaper />
             </Grid2>
-            <Grid2  size={2}>
-            <Link to="/all/Questionpaper">
-              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", align: "center"}}>
-                <h1 className="text-blue-500 uppercase w-full font-semibold">All Question papers</h1>
-              </Paper>
+            <Grid2 size={2}>
+              <Link to="/all/Questionpaper">
+                <Paper
+                  elevation={10}
+                  className="p-4"
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "rgb(50,50,50)",
+                    align: "center",
+                  }}
+                >
+                  <h1 className="text-blue-500 uppercase w-full font-semibold">
+                    All Question papers
+                  </h1>
+                </Paper>
               </Link>
             </Grid2>
-            <Grid2  size={2}>
-            <Link to="/all/Answerpapers">
-              <Paper elevation={10} className="p-4" style={{cursor: "pointer", backgroundColor: "rgb(50,50,50)", align: "center"}}>
-                <h1 className="text-blue-500 uppercase w-full font-semibold">All Answer papers</h1>
-              </Paper>
+            <Grid2 size={2}>
+              <Link to="/all/Answerpapers">
+                <Paper
+                  elevation={10}
+                  className="p-4"
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "rgb(50,50,50)",
+                    align: "center",
+                  }}
+                >
+                  <h1 className="text-blue-500 uppercase w-full font-semibold">
+                    All Answer papers
+                  </h1>
+                </Paper>
               </Link>
             </Grid2>
-            
-            
           </Grid2>
 
           {/* StatCard Section */}
           <Grid2 item xs={12} md={8}>
             <StatCard data={dashboardData} />
           </Grid2>
-          
 
           {/* AnswerPapersStatus Section */}
           <Grid2 item xs={12} md={6}>

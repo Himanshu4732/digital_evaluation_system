@@ -10,7 +10,7 @@ const Navbar = () => {
   }, [admin]);
 
   return (
-    <nav className="bg-zinc-900/75 p-4 text-white shadow-lg fixed top-0 left-0 w-screen backdrop-filter backdrop-blur-lg">
+    <nav className="bg-zinc-900/75 p-4 text-white shadow-lg fixed top-0 left-0 w-screen backdrop-filter backdrop-blur-lg z-50">
       <ul className="flex justify-between items-center">
         <li>
           <Link to="/adminDashboard" className="p-4 text-3xl font-bold cursor-pointer">
@@ -20,7 +20,7 @@ const Navbar = () => {
         <Typography variant="h3" className="text-center mb-4 text-blue-400">
           Admin Dashboard
         </Typography>
-        <li className="flex justify-center items-center gap-4">
+        <li className="flex justify-center items-center gap-4 p-4">
           <div>
             <Link to="/admin/profile" className="hover:underline hover:text-blue-200">
               Profile

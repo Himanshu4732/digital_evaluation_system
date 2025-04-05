@@ -11,10 +11,9 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
     answerSheet: null,
   });
 
-  const [subjects, setSubjects] = useState([]); // List of subjects for suggestions
-  const [exams, setExams] = useState([]); // List of exams for suggestions
+  const [subjects, setSubjects] = useState([]);
+  const [exams, setExams] = useState([]);
 
-  // Fetch subjects and exams for suggestions
   useEffect(() => {
     const fetchSubjectsAndExams = async () => {
       try {
@@ -66,24 +65,85 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
         },
       });
 
-      console.log("Answer paper created:", response.data);
-      // Refresh the list of answer papers
-      handleClose(); // Close the form
+      fetchAnswerPapers();
+      handleClose();
     } catch (error) {
       console.error("Error creating answer paper", error);
     }
   };
 
+  const darkThemeStyles = {
+    dialog: {
+      backgroundColor: "rgb(50,50,50)",
+    },
+    textField: {
+      backgroundColor: "rgb(60,60,60)",
+      color: "white",
+      "& .MuiInputBase-input": {
+        color: "white",
+      },
+      "& .MuiInputLabel-root": {
+        color: "rgba(255,255,255,0.7)",
+      },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "rgba(255,255,255,0.3)",
+        },
+        "&:hover fieldset": {
+          borderColor: "rgba(255,255,255,0.5)",
+        },
+      },
+    },
+    button: {
+      color: "white",
+      backgroundColor: "rgb(40,40,40)",
+      "&:hover": {
+        backgroundColor: "rgba(255,255,255,0.1)",
+      },
+    },
+    autocomplete: {
+      "& .MuiAutocomplete-popper": {
+        "& .MuiPaper-root": {
+          backgroundColor: "rgb(60,60,60)",
+          color: "white",
+          "& .MuiAutocomplete-option": {
+            "&[data-focus='true']": {
+              backgroundColor: "rgba(255,255,255,0.1)",
+            },
+            "&:hover": {
+              backgroundColor: "rgba(255,255,255,0.1)",
+            },
+          },
+        },
+      },
+    },
+    fileInput: {
+      color: "white",
+      marginTop: "16px",
+      "&::file-selector-button": {
+        backgroundColor: "rgb(70,70,70)",
+        color: "white",
+        padding: "8px 16px",
+        border: "1px solid rgba(255,255,255,0.3)",
+        borderRadius: "4px",
+        cursor: "pointer",
+        "&:hover": {
+          backgroundColor: "rgb(90,90,90)",
+        },
+      },
+    },
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Upload Answer Paper</DialogTitle>
+    <Dialog open={open} onClose={handleClose} PaperProps={{ style: darkThemeStyles.dialog }}>
+      <DialogTitle style={{ color: "white" }}>Upload Answer Paper</DialogTitle>
       <DialogContent>
-        {/* Subject Autocomplete */}
         <Autocomplete
           options={subjects}
           getOptionLabel={(subject) => subject.subjectName || ""}
           value={formData.subject}
           onChange={(e, value) => handleInputChange(e, value, "subject")}
+          sx={darkThemeStyles.autocomplete}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -91,16 +151,17 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
               label="Subject"
               fullWidth
               margin="normal"
+              sx={darkThemeStyles.textField}
             />
           )}
         />
 
-        {/* Exam Autocomplete */}
         <Autocomplete
           options={exams}
           getOptionLabel={(exam) => exam.name || ""}
           value={formData.exam}
           onChange={(e, value) => handleInputChange(e, value, "exam")}
+          sx={darkThemeStyles.autocomplete}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -108,6 +169,7 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
               label="Exam"
               fullWidth
               margin="normal"
+              sx={darkThemeStyles.textField}
             />
           )}
         />
@@ -119,7 +181,9 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
           margin="normal"
           value={formData.studentEmail}
           onChange={(e) => handleInputChange(e, e.target.value, "studentEmail")}
+          sx={darkThemeStyles.textField}
         />
+
         <TextField
           name="total_marks"
           label="Total Marks"
@@ -127,19 +191,19 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
           margin="normal"
           value={formData.total_marks}
           onChange={(e) => handleInputChange(e, e.target.value, "total_marks")}
+          sx={darkThemeStyles.textField}
         />
+
         <input
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
-          className="mt-4"
+          style={darkThemeStyles.fileInput}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit} color="primary">
-          Upload
-        </Button>
+        <Button onClick={handleClose} sx={darkThemeStyles.button}>Cancel</Button>
+        <Button onClick={handleSubmit} sx={darkThemeStyles.button}>Upload</Button>
       </DialogActions>
     </Dialog>
   );
