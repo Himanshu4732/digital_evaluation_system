@@ -8,6 +8,7 @@ const adminServer = require('../services/adminServer');
 const { validationResult } = require('express-validator');
 const blackListTokenModel = require('../models/blackListTokenModel');
 const { uploadOnCloudinary } = require("../utils/cloudinaryUtils");
+const examModel = require('../models/examModel');
 
 module.exports.registerAdmin = async (req, res, next) => {
 
@@ -100,8 +101,8 @@ module.exports.getDashboard = async (req, res, next) => {
     const totalAnswerPapers = await answerPaperModel.countDocuments();
     const totalQuestionPapers = await questionPaperModel.countDocuments();
     const totalFeedbacks = await feedbackModel.countDocuments();
-
-    //data to answerpapers status 
+    const totalExams = await examModel.countDocuments();
+    
     const answerPapers = await answerPaperModel.find();
     const answerPapersStatus = {
         'Assigned': 0,
@@ -126,7 +127,8 @@ module.exports.getDashboard = async (req, res, next) => {
         totalQuestionPapers,
         totalFeedbacks,
         answerPapersStatus,
-        feedbackMessagesStatus
+        feedbackMessagesStatus,
+        totalExams,
     });
 
 }

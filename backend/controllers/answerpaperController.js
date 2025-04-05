@@ -69,22 +69,28 @@ exports.assignanswerPaper = async (req, res) => {
   const answerpaperId = req.params.answerpaperId;
 
   try {
-    const paper = await answerpaperModel.findById(answerpaperId);
+   const paper = await answerpaperModel.findById(answerpaperId);
 
-    if (!paper) {
-      return res.status(404).json({ message: "Paper not found" });
-    }
+if (!paper) {
+  return res.status(404).json({ message: "Paper not found" });
+}
 
-    const teacher = await teacherModel.findOne({ email: teacherEmail });
+const teacher = await teacherModel.findOne({ email: teacherEmail });
 
-    if (!teacher) {
-      return res.status(404).json({ message: "Teacher not found" });
-    }
+if (!teacher) {
+  return res.status(404).json({ message: "Teacher not found" });
+}
 
-    paper.teacher = teacher._id;
-    paper.assigned_date = new Date(); // 
-    paper.status = "Pending";
-    await paper.save();
+if (paper.marks && paper.marks.length > 0) {
+  await marksModel.deleteMany({ _id: { $in: paper.marks } });
+}
+
+paper.teacher = teacher._id;
+paper.assigned_date = new Date();
+paper.marks = []; 
+paper.status = "Pending";
+paper.elavuation_date = null;
+await paper.save();
 
     if (!teacher.assignedPapers.includes(paper._id)) {
       teacher.assignedPapers.push(paper._id);

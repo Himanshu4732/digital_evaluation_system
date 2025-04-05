@@ -12,11 +12,11 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const AnswerPapersStatus = ({ data }) => {
   const chartData = {
-    labels: ['Assigned', 'Pending', 'Evaluated'],
+    labels: ['Not Assigned', 'Pending', 'Evaluated'],
     datasets: [
       {
         label: 'Answer Papers Status',
-        data: [data.Assigned, data.Pending, data.Evaluated],
+        data: [data.Not_Assigned, data.Pending, data.Evaluated],
         backgroundColor: ['#3b82f6', '#f97316', '#10b981'],
         borderColor: ['#3b82f6', '#f97316', '#10b981'],
         borderWidth: 1,

@@ -10,7 +10,9 @@ import {
   TableContainer, 
   TableHead, 
   TableRow,
-  IconButton
+  IconButton,
+  CircularProgress,
+  Box
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -23,10 +25,39 @@ const ViewAnswerpaper = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [totalMarks, setTotalMarks] = useState(0);
 
+  const darkThemeStyles = {
+    paper: {
+      backgroundColor: "#1e1e1e",
+      color: "white",
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "#b0b0b0",
+      accent: "#64b5f6",
+    },
+    tableHeader: {
+      backgroundColor: "#2d2d2d",
+      color: "#64b5f6",
+      fontWeight: "bold"
+    },
+    tableRow: {
+      "&:nth-of-type(odd)": {
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
+      },
+      "&:hover": {
+        backgroundColor: "rgba(255, 255, 255, 0.08)",
+      }
+    },
+    totalMarks: {
+      color: "#4caf50",
+      fontWeight: "bold"
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const answerSheetResponse = await axios.get(
+        const response = await axios.get(
           `http://localhost:8000/answerpaper/${answerSheetId}`,
           {
             withCredentials: true,
@@ -36,13 +67,13 @@ const ViewAnswerpaper = () => {
           }
         );
 
-        setAnswerSheetUrl(answerSheetResponse.data.answerSheet);
-        const initialMarks = answerSheetResponse.data.marks || [];
+        setAnswerSheetUrl(response.data.answerSheet);
+        const initialMarks = response.data.marks || [];
         setMarks(initialMarks);
-        setIsLoading(false);
         calculateTotal(initialMarks);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -51,128 +82,158 @@ const ViewAnswerpaper = () => {
   }, [answerSheetId]);
 
   const calculateTotal = (marksArray) => {
-    const total = marksArray.map(mark => mark.marksObtained || 0).reduce((acc, curr) => acc + curr, 0);
+    const total = marksArray.reduce((acc, curr) => acc + (curr.marksObtained || 0), 0);
     setTotalMarks(total);
   };
 
   if (isLoading) {
     return (
-      <div className="bg-zinc-800 min-h-screen text-white flex items-center justify-center">
-        <Typography variant="h5" className="text-blue-400">
-          Loading...
-        </Typography>
-      </div>
+      <Box 
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        minHeight="100vh"
+        bgcolor="#1e1e1e"
+      >
+        <CircularProgress style={{ color: darkThemeStyles.text.accent }} />
+      </Box>
     );
   }
 
   return (
-    <div className=" bg-zinc-800 min-h-screen text-white p-8">
-      {/* Header Section */}
-      <div className="flex items-center mb-6">
-        <IconButton onClick={() => navigate(-1)} className="text-blue-400 mr-2">
-          <ArrowBackIcon />
+    <div className="bg-zinc-800 min-h-screen text-white p-8">
+      <div className="flex items-center mb-8">
+        <IconButton 
+          onClick={() => navigate(-1)} 
+          style={{ color: darkThemeStyles.text.accent }}
+        >
+          <ArrowBackIcon fontSize="large" />
         </IconButton>
-        <Typography variant="h4" className="text-blue-400 font-bold">
-          View Answer Paper
+        <Typography 
+          variant="h4" 
+          style={{ 
+            color: darkThemeStyles.text.accent,
+            marginLeft: "16px"
+          }}
+        >
+          Answer Paper Evaluation
         </Typography>
       </div>
 
       <Grid container spacing={4}>
-        {/* Left Side - Answer Sheet */}
         <Grid item xs={12} md={6}>
-          <Paper
-            elevation={10}
-            style={{
-              backgroundColor: "#1e1e1e",
-              borderRadius: "10px",
-              overflow: "hidden",
-            }}
+          <Paper 
+            elevation={10} 
+            style={darkThemeStyles.paper}
             className="p-6 h-full"
           >
-            <Typography
-              variant="h6"
-              className="text-blue-400 mb-4 font-semibold"
+            <Typography 
+              variant="h5" 
+              style={{ 
+                color: darkThemeStyles.text.accent,
+                marginBottom: "24px"
+              }}
             >
-              Answer Sheet
+              Student Answer Sheet
             </Typography>
             {answerSheetUrl ? (
               <iframe
                 src={answerSheetUrl}
                 width="100%"
                 height="600px"
-                style={{
-                  border: "2px solid #2c2c2c",
-                  borderRadius: "5px",
+                style={{ 
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  borderRadius: "8px"
                 }}
-                title="Answer Sheet"
+                title="Student Answer Sheet"
               />
             ) : (
-              <Typography className="text-gray-400">
-                No answer sheet available.
+              <Typography 
+                variant="body1" 
+                style={{ color: darkThemeStyles.text.secondary }}
+                className="text-center py-16"
+              >
+                No answer sheet available for viewing
               </Typography>
             )}
           </Paper>
         </Grid>
 
-        {/* Right Side */}
         <Grid item xs={12} md={6}>
-          <Paper
-            elevation={10}
-            style={{
-              backgroundColor: "#1e1e1e",
-              borderRadius: "10px",
-              overflow: "hidden",
-            }}
+          <Paper 
+            elevation={10} 
+            style={darkThemeStyles.paper}
             className="p-6 h-full"
           >
-            <Typography
-              variant="h6"
-              className="text-blue-400 mb-4 font-semibold"
+            <Typography 
+              variant="h5" 
+              style={{ 
+                color: darkThemeStyles.text.accent,
+                marginBottom: "24px"
+              }}
             >
-              Marks Entry
+              Evaluation Details
             </Typography>
 
             <TableContainer>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{ color: "#9ca3af", fontWeight: "bold" }}>
-                      Q.No
-                    </TableCell>
-                    <TableCell style={{ color: "#9ca3af", fontWeight: "bold" }}>
-                      Max Marks
-                    </TableCell>
-                    <TableCell style={{ color: "#9ca3af", fontWeight: "bold" }}>
-                      Marks Obtained
-                    </TableCell>
+                    <TableCell style={darkThemeStyles.tableHeader}>Question</TableCell>
+                    <TableCell style={darkThemeStyles.tableHeader} align="right">Max Marks</TableCell>
+                    <TableCell style={darkThemeStyles.tableHeader} align="right">Marks Obtained</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {marks.map((mark, index) => (
-                    <TableRow key={index}>
-                      <TableCell style={{ color: "#e5e7eb" }}>
-                        {mark.questionNumber || index + 1}
-                      </TableCell>
-                      <TableCell style={{ color: "#e5e7eb" }}>
-                        {mark.maxMarks}
-                      </TableCell>
-                      <TableCell style={{ color: "#e5e7eb" }}>
-                        {mark.marksObtained || ""}
+                  {marks.length > 0 ? (
+                    marks.map((mark, index) => (
+                      <TableRow key={index} style={darkThemeStyles.tableRow}>
+                        <TableCell style={{ color: darkThemeStyles.text.primary }}>
+                          {mark.questionNumber || `Q${index + 1}`}
+                        </TableCell>
+                        <TableCell align="right" style={{ color: darkThemeStyles.text.primary }}>
+                          {mark.maxMarks}
+                        </TableCell>
+                        <TableCell align="right" style={{ color: darkThemeStyles.text.primary }}>
+                          {mark.marksObtained || "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell 
+                        colSpan={3} 
+                        style={{ 
+                          color: darkThemeStyles.text.secondary,
+                          textAlign: "center",
+                          padding: "24px"
+                        }}
+                      >
+                        No marks data available
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
 
-            <div className="mt-4 flex justify-between items-center">
-              <Typography
-                variant="h6"
-                style={{ color: "#9ca3af", fontWeight: "bold" }}
+            <Box 
+              display="flex" 
+              justifyContent="flex-end" 
+              mt={4}
+              p={2}
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                borderRadius: "4px"
+              }}
+            >
+              <Typography 
+                variant="h6" 
+                style={darkThemeStyles.totalMarks}
               >
                 Total Marks: {totalMarks}
               </Typography>
-            </div>
+            </Box>
           </Paper>
         </Grid>
       </Grid>

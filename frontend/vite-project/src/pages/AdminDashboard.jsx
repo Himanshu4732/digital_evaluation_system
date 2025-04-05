@@ -42,7 +42,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="bg-zinc-800 w-full h-screen text-white overflow-y-auto no-scrollbar" >
+    <div className="bg-zinc-800 w-full h-screen text-white overflow-y-auto no-scrollbar">
       <Navbar />
       <div className="dashboard-container p-8 pb-4 py-40">
         <Grid2 container spacing={3} columns={12}>
@@ -91,7 +91,7 @@ const AdminDashboard = () => {
           </Grid2>
 
           {/* StatCard Section */}
-          <Grid2 item xs={12} md={8}>
+          <Grid2 item size={8}>
             <StatCard data={dashboardData} />
           </Grid2>
 

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Paper, Typography, Button, Grid, IconButton } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const CheckedPaper = () => {
   const [evaluatedPapers, setEvaluatedPapers] = useState([]);
-  const [groupedPapers, setGroupedPapers] = useState({}); // Grouped papers by section
-  const [selectedSection, setSelectedSection] = useState(null); // Selected section
+  const [groupedPapers, setGroupedPapers] = useState({});
+  const [selectedSection, setSelectedSection] = useState(null);
+  const navigate = useNavigate();
 
-  // Fetch Evaluated papers
   const fetchEvaluatedPapers = async () => {
     try {
       const response = await axios.get("http://localhost:8000/teacher/checkedPaper", {
@@ -18,18 +19,16 @@ const CheckedPaper = () => {
         },
       });
       setEvaluatedPapers(response.data);
-      groupPapersBySection(response.data); 
-      console.log(response.data);
+      groupPapersBySection(response.data);
     } catch (error) {
-      console.error("Error fetching Evaluated papers", error);
+      console.error("Error fetching evaluated papers", error);
     }
   };
 
-  // Group papers by section
   const groupPapersBySection = (papers) => {
     const grouped = {};
     papers.forEach((paper) => {
-      const section = paper.student.section.sectionName; // Assuming `section` is a field in the `student` object
+      const section = paper.student.section.sectionName;
       if (!grouped[section]) {
         grouped[section] = [];
       }
@@ -38,7 +37,6 @@ const CheckedPaper = () => {
     setGroupedPapers(grouped);
   };
 
-  // Handle section click
   const handleSectionClick = (section) => {
     setSelectedSection(section);
   };
@@ -47,27 +45,62 @@ const CheckedPaper = () => {
     fetchEvaluatedPapers();
   }, []);
 
+  const darkThemeStyles = {
+    paper: {
+      backgroundColor: "#1e1e1e",
+      color: "white",
+    },
+    button: {
+      color: "white",
+      backgroundColor: "#1976d2",
+      "&:hover": {
+        backgroundColor: "#1565c0",
+      },
+    },
+    editButton: {
+      color: "white",
+      backgroundColor: "#ff9800",
+      "&:hover": {
+        backgroundColor: "#f57c00",
+      },
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "#b0b0b0",
+      accent: "#64b5f6",
+    },
+  };
+
   return (
     <div className="bg-zinc-800 min-h-screen text-white p-8">
-      <Typography variant="h4" className="mb-6 text-blue-400">
-        Evaluated Papers
-      </Typography>
+      <div className="flex items-center mb-6 gap-4">
+        <Button
+          variant="contained"
+          style={darkThemeStyles.button}
+          onClick={() => navigate("/teacherDashboard")}
+          startIcon={<ArrowBackIcon />}
+        >
+          Dashboard
+        </Button>
+        <Typography variant="h4" style={{ color: darkThemeStyles.text.accent }}>
+          Evaluated Papers
+        </Typography>
+      </div>
 
-      {/* Display Sections */}
       {!selectedSection && (
         <Grid container spacing={3}>
           {Object.keys(groupedPapers).map((section) => (
             <Grid item xs={12} sm={6} md={4} key={section}>
               <Paper
                 elevation={10}
-                style={{ backgroundColor: "#1e1e1e" }}
-                className="p-6 text-center cursor-pointer"
+                style={darkThemeStyles.paper}
+                className="p-6 text-center cursor-pointer hover:bg-zinc-700 transition-colors"
                 onClick={() => handleSectionClick(section)}
               >
-                <Typography variant="h6" className="text-blue-400">
+                <Typography variant="h6" style={{ color: darkThemeStyles.text.accent }}>
                   Section: {section}
                 </Typography>
-                <Typography variant="body2" className="text-zinc-400">
+                <Typography variant="body2" style={{ color: darkThemeStyles.text.secondary }}>
                   Papers: {groupedPapers[section].length}
                 </Typography>
               </Paper>
@@ -76,29 +109,33 @@ const CheckedPaper = () => {
         </Grid>
       )}
 
-      {/* Display Evaluated Papers for Selected Section */}
       {selectedSection && (
         <>
-          <Button variant="contained" color="primary" onClick={() => setSelectedSection(null)} className="mb-6">
-            Back to Sections
-          </Button>
+          <div className="flex gap-4 mb-6">
+            <IconButton
+              style={darkThemeStyles.button}
+              onClick={() => setSelectedSection(null)}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          </div>
 
           <Grid container spacing={3}>
             {groupedPapers[selectedSection].map((paper) => (
               <Grid item xs={12} sm={6} md={4} key={paper._id}>
-                <Paper elevation={10} style={{ backgroundColor: "#1e1e1e" }} className="p-6">
-                  <Typography variant="h6" className="text-blue-400">
+                <Paper elevation={10} style={darkThemeStyles.paper} className="p-6">
+                  <Typography variant="h6" style={{ color: darkThemeStyles.text.accent }}>
                     Subject: {paper.subject.subjectName}
                   </Typography>
-                  <Typography variant="body1" className="text-white">
+                  <Typography variant="body1" style={{ color: darkThemeStyles.text.primary }}>
                     Student: {paper.student.email}
                   </Typography>
-                  <Typography variant="body2" className="text-zinc-400">
+                  <Typography variant="body2" style={{ color: darkThemeStyles.text.secondary }}>
                     Status: {paper.status}
                   </Typography>
                   <Button
                     variant="contained"
-                    color="warning"
+                    style={darkThemeStyles.editButton}
                     component={Link}
                     to={`/teacher/update/${paper._id}`}
                     className="mt-4"

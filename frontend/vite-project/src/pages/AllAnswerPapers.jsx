@@ -4,14 +4,42 @@ import { Paper, Typography, Button, Grid, IconButton, Dialog, DialogTitle, Dialo
 import { Link, useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const AllAnswerPapers = () => {
   const [answerPapers, setAnswerPapers] = useState([]);
   const [groupedPapers, setGroupedPapers] = useState({});
-  const [selectedSection, setSelectedSection] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [sortCriteria, setSortCriteria] = useState("section");
   const [openAssignDialog, setOpenAssignDialog] = useState(false);
-  const [teacherEmail, setTeacherEmail] = useState("");
+  const [openSingleAssignDialog, setOpenSingleAssignDialog] = useState(false);
+  const [bulkTeacherEmail, setBulkTeacherEmail] = useState("");
+  const [singleTeacherEmail, setSingleTeacherEmail] = useState("");
+  const [selectedPaper, setSelectedPaper] = useState(null);
   const navigate = useNavigate();
+
+  const groupPapers = (papers, criteria) => {
+    const grouped = {};
+    papers.forEach((paper) => {
+      let key;
+      switch (criteria) {
+        case "section":
+          key = paper.student.section;
+          break;
+        case "exam":
+          key = paper.exam.examType;
+          break;
+        case "status":
+          key = paper.status;
+          break;
+        default:
+          key = paper.student.section;
+      }
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(paper);
+    });
+    setGroupedPapers(grouped);
+  };
 
   const fetchAnswerPapers = async () => {
     try {
@@ -22,26 +50,22 @@ const AllAnswerPapers = () => {
         },
       });
       setAnswerPapers(response.data);
-      groupPapersBySection(response.data);
+      groupPapers(response.data, sortCriteria);
     } catch (error) {
       console.error("Error fetching answer papers", error);
     }
   };
 
-  const groupPapersBySection = (papers) => {
-    const grouped = {};
-    papers.forEach((paper) => {
-      const section = paper.student.section;
-      if (!grouped[section]) {
-        grouped[section] = [];
-      }
-      grouped[section].push(paper);
-    });
-    setGroupedPapers(grouped);
-  };
+  useEffect(() => {
+    fetchAnswerPapers();
+  }, []);
 
-  const handleSectionClick = (section) => {
-    setSelectedSection(section);
+  useEffect(() => {
+    groupPapers(answerPapers, sortCriteria);
+  }, [sortCriteria]);
+
+  const handleGroupClick = (group) => {
+    setSelectedGroup(group);
   };
 
   const handleDeleteAnswerPaper = async (id) => {
@@ -58,12 +82,13 @@ const AllAnswerPapers = () => {
     }
   };
 
-  const handleAssignPapers = async () => {
+  const handleBulkAssign = async () => {
     try {
-      for (const paper of groupedPapers[selectedSection]) {
+      const papersToAssign = groupedPapers[selectedGroup].filter(paper => !paper.teacherEmail);
+      for (const paper of papersToAssign) {
         await axios.patch(
           `http://localhost:8000/answerpaper/assign/${paper._id}`,
-          { teacherEmail },
+          { teacherEmail: bulkTeacherEmail },
           {
             withCredentials: true,
             headers: {
@@ -72,29 +97,45 @@ const AllAnswerPapers = () => {
           }
         );
       }
-      alert("Answer papers assigned successfully!");
+      alert(`Assigned ${papersToAssign.length} papers successfully!`);
       setOpenAssignDialog(false);
+      setBulkTeacherEmail("");
+      fetchAnswerPapers();
     } catch (error) {
       console.error("Error assigning answer papers", error);
       alert("Failed to assign answer papers.");
     }
   };
 
-  useEffect(() => {
-    fetchAnswerPapers();
-  }, []);
+  const handleSingleAssign = async () => {
+    if (!selectedPaper || !singleTeacherEmail) return;
+    try {
+      await axios.patch(
+        `http://localhost:8000/answerpaper/assign/${selectedPaper._id}`,
+        { teacherEmail: singleTeacherEmail },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      alert("Paper assigned successfully!");
+      setOpenSingleAssignDialog(false);
+      setSingleTeacherEmail("");
+      fetchAnswerPapers();
+    } catch (error) {
+      console.error("Error assigning paper", error);
+      alert("Failed to assign paper.");
+    }
+  };
 
   const darkThemeStyles = {
-    paper: {
-      backgroundColor: "#1e1e1e",
-      color: "white",
-    },
+    paper: { backgroundColor: "#1e1e1e", color: "white" },
     button: {
       color: "white",
       backgroundColor: "#1976d2",
-      "&:hover": {
-        backgroundColor: "#1565c0",
-      },
+      "&:hover": { backgroundColor: "#1565c0" },
     },
     deleteButton: {
       backgroundColor: "maroon",
@@ -103,14 +144,19 @@ const AllAnswerPapers = () => {
       top: "10px",
       right: "10px",
     },
+    assignButton: {
+      backgroundColor: "green",
+      color: "white",
+      position: "absolute",
+      top: "10px",
+      right: "60px",
+    },
     text: {
       primary: "#ffffff",
       secondary: "#b0b0b0",
       accent: "#64b5f6",
     },
-    dialog: {
-      backgroundColor: "#2d2d2d",
-    },
+    dialog: { backgroundColor: "#2d2d2d" },
   };
 
   return (
@@ -127,37 +173,52 @@ const AllAnswerPapers = () => {
         <Typography variant="h4" style={{ color: darkThemeStyles.text.accent }}>
           All Answer Papers
         </Typography>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "1rem" }}>
+          <select
+            value={sortCriteria}
+            onChange={(e) => setSortCriteria(e.target.value)}
+            style={{
+              backgroundColor: darkThemeStyles.paper.backgroundColor,
+              color: darkThemeStyles.text.primary,
+              padding: "8px",
+              borderRadius: "4px",
+              border: "none",
+            }}
+          >
+            <option value="section">Section</option>
+            <option value="exam">Exam</option>
+            <option value="status">Status</option>
+          </select>
+        </div>
       </div>
 
-      {!selectedSection && (
+      {!selectedGroup ? (
         <Grid container spacing={3}>
-          {Object.keys(groupedPapers).map((section) => (
-            <Grid item xs={12} sm={6} md={4} key={section}>
+          {Object.keys(groupedPapers).map((group) => (
+            <Grid item xs={12} sm={6} md={4} key={group}>
               <Paper
                 elevation={10}
                 style={darkThemeStyles.paper}
                 className="p-6 text-center cursor-pointer hover:bg-zinc-700 transition-colors"
-                onClick={() => handleSectionClick(section)}
+                onClick={() => handleGroupClick(group)}
               >
                 <Typography variant="h6" style={{ color: darkThemeStyles.text.accent }}>
-                  Section: {section}
+                  {sortCriteria === "section" && "Section: "}
+                  {sortCriteria === "exam" && "Exam: "}
+                  {sortCriteria === "status" && "Status: "}
+                  {group}
                 </Typography>
                 <Typography variant="body2" style={{ color: darkThemeStyles.text.secondary }}>
-                  Papers: {groupedPapers[section].length}
+                  Papers: {groupedPapers[group].length}
                 </Typography>
               </Paper>
             </Grid>
           ))}
         </Grid>
-      )}
-
-      {selectedSection && (
+      ) : (
         <>
           <div className="flex gap-4 mb-6">
-            <IconButton
-              style={darkThemeStyles.button}
-              onClick={() => setSelectedSection(null)}
-            >
+            <IconButton style={darkThemeStyles.button} onClick={() => setSelectedGroup(null)}>
               <ArrowBackIcon />
             </IconButton>
             <Button
@@ -170,7 +231,7 @@ const AllAnswerPapers = () => {
           </div>
 
           <Grid container spacing={3}>
-            {groupedPapers[selectedSection].map((paper) => (
+            {groupedPapers[selectedGroup].map((paper) => (
               <Grid item xs={12} sm={6} md={4} key={paper._id}>
                 <Paper elevation={10} style={darkThemeStyles.paper} className="p-6 relative">
                   <IconButton
@@ -179,7 +240,17 @@ const AllAnswerPapers = () => {
                   >
                     <DeleteIcon />
                   </IconButton>
+                  <IconButton
+                    style={darkThemeStyles.assignButton}
+                    onClick={() => {
+                      setSelectedPaper(paper);
+                      setOpenSingleAssignDialog(true);
+                    }}
+                  >
+                    <AssignmentIcon />
+                  </IconButton>
 
+                  {/* Paper content remains same */}
                   <Typography variant="h6" style={{ color: darkThemeStyles.text.accent }}>
                     Subject: {paper.subject.subjectName}
                   </Typography>
@@ -189,7 +260,11 @@ const AllAnswerPapers = () => {
                   <Typography variant="body2" style={{ color: darkThemeStyles.text.secondary }}>
                     Student: {paper.student.email}
                   </Typography>
-                  <Typography variant="body2" style={{ color: darkThemeStyles.text.secondary }}>
+                  <Typography variant="body2" style={{ 
+                    color: paper.status === "Evaluated" ? "green" : 
+                           paper.status === "Pending" ? "orange" : 
+                           paper.status === "Under_Review" ? "purple" : "red" 
+                  }}>
                     Status: {paper.status}
                   </Typography>
 
@@ -209,6 +284,7 @@ const AllAnswerPapers = () => {
         </>
       )}
 
+      {/* Bulk Assign Dialog */}
       <Dialog
         open={openAssignDialog}
         onClose={() => setOpenAssignDialog(false)}
@@ -221,8 +297,8 @@ const AllAnswerPapers = () => {
           <TextField
             fullWidth
             label="Teacher Email"
-            value={teacherEmail}
-            onChange={(e) => setTeacherEmail(e.target.value)}
+            value={bulkTeacherEmail}
+            onChange={(e) => setBulkTeacherEmail(e.target.value)}
             margin="normal"
             InputLabelProps={{ style: { color: darkThemeStyles.text.secondary } }}
             InputProps={{ style: { color: darkThemeStyles.text.primary } }}
@@ -232,7 +308,37 @@ const AllAnswerPapers = () => {
           <Button onClick={() => setOpenAssignDialog(false)} style={{ color: darkThemeStyles.text.primary }}>
             Cancel
           </Button>
-          <Button onClick={handleAssignPapers} style={{ color: darkThemeStyles.text.accent }}>
+          <Button onClick={handleBulkAssign} style={{ color: darkThemeStyles.text.accent }}>
+            Assign
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Single Assign Dialog */}
+      <Dialog
+        open={openSingleAssignDialog}
+        onClose={() => setOpenSingleAssignDialog(false)}
+        PaperProps={{ style: darkThemeStyles.dialog }}
+      >
+        <DialogTitle style={{ color: darkThemeStyles.text.primary }}>
+          Assign Single Paper
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            label="Teacher Email"
+            value={singleTeacherEmail}
+            onChange={(e) => setSingleTeacherEmail(e.target.value)}
+            margin="normal"
+            InputLabelProps={{ style: { color: darkThemeStyles.text.secondary } }}
+            InputProps={{ style: { color: darkThemeStyles.text.primary } }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenSingleAssignDialog(false)} style={{ color: darkThemeStyles.text.primary }}>
+            Cancel
+          </Button>
+          <Button onClick={handleSingleAssign} style={{ color: darkThemeStyles.text.accent }}>
             Assign
           </Button>
         </DialogActions>

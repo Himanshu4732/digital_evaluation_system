@@ -8,9 +8,10 @@ import {
   Grid,
   IconButton,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"; // Import back arrow icon
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"; // Import forward arrow icon
+import { useParams, useNavigate } from "react-router-dom";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const EvaluateAnswerSheet = () => {
   const { answerSheetId } = useParams();
@@ -19,6 +20,7 @@ const EvaluateAnswerSheet = () => {
   const [marksArray, setMarksArray] = useState([]);
   const [answerSheetUrl, setAnswerSheetUrl] = useState("");
   const [marksSubmitted, setMarksSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAnswerSheetAndQuestions = async () => {
@@ -34,15 +36,9 @@ const EvaluateAnswerSheet = () => {
         );
 
         setAnswerSheetUrl(answerSheetResponse.data.answerSheet);
-        console.log(answerSheetResponse);
         if (answerSheetResponse.data.status === "Evaluated") {
           setMarksSubmitted(true);
-        }
-
-        // Check if the answer sheet is already evaluated
-        if (answerSheetResponse.data.status === "Evaluated") {
-          setMarksSubmitted(true);
-          setMarksArray(answerSheetResponse.data.marksArray || []); // Load existing marks if already evaluated
+          setMarksArray(answerSheetResponse.data.marksArray || []);
         }
 
         const questionsResponse = await axios.get(
@@ -56,7 +52,6 @@ const EvaluateAnswerSheet = () => {
         );
 
         setQuestions(questionsResponse.data.questions);
-        console.log(questionsResponse.data);
       } catch (error) {
         console.error("Error fetching answer sheet or questions:", error);
       }
@@ -65,7 +60,6 @@ const EvaluateAnswerSheet = () => {
     fetchAnswerSheetAndQuestions();
   }, [answerSheetId]);
 
-  // Handle mark input change
   const handleMarkChange = (event) => {
     const newMarksArray = [...marksArray];
     newMarksArray[currentQuestionIndex] = {
@@ -73,31 +67,25 @@ const EvaluateAnswerSheet = () => {
       obtainMarks: parseInt(event.target.value, 10),
     };
     setMarksArray(newMarksArray);
-    console.log(marksArray);
   };
 
-  // Handle next question
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
-  // Handle previous question
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
-  // Handle submit marks
   const handleSubmitMarks = async () => {
     try {
       const response = await axios.patch(
         `http://localhost:8000/answerpaper/check/${answerSheetId}`,
-        {
-          marksArray,
-        },
+        { marksArray },
         {
           withCredentials: true,
           headers: {
@@ -105,31 +93,82 @@ const EvaluateAnswerSheet = () => {
           },
         }
       );
-
       alert("Marks submitted successfully!");
-      setMarksSubmitted(true); // Disable editing after submission
-      console.log(response.data);
+      setMarksSubmitted(true);
     } catch (error) {
       console.error("Error submitting marks:", error);
       alert("Failed to submit marks.");
     }
   };
 
+  const darkThemeStyles = {
+    paper: {
+      backgroundColor: "#1e1e1e",
+      color: "white",
+    },
+    button: {
+      color: "white",
+      backgroundColor: "#1976d2",
+      "&:hover": {
+        backgroundColor: "#1565c0",
+      },
+    },
+    submitButton: {
+      color: "white",
+      backgroundColor: "#4caf50",
+      "&:hover": {
+        backgroundColor: "#388e3c",
+      },
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "#b0b0b0",
+      accent: "#64b5f6",
+    },
+    textField: {
+      backgroundColor: "#2d2d2d",
+      "& .MuiInputBase-input": {
+        color: "white",
+      },
+      "& .MuiInputLabel-root": {
+        color: "rgba(255,255,255,0.7)",
+      },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "rgba(255,255,255,0.3)",
+        },
+        "&:hover fieldset": {
+          borderColor: "rgba(255,255,255,0.5)",
+        },
+      },
+    },
+  };
+
   return (
     <div className="bg-zinc-800 min-h-screen text-white p-8">
-      <Typography variant="h4" className="mb-6 text-blue-400">
-        Evaluate Answer Sheet
-      </Typography>
+      <div className="flex items-center mb-6 gap-4">
+        <Button
+          variant="contained"
+          style={darkThemeStyles.button}
+          onClick={() => navigate(-1)}
+          startIcon={<ArrowBackIcon />}
+        >
+          Back
+        </Button>
+        <Typography variant="h4" style={{ color: darkThemeStyles.text.accent }}>
+          Evaluate Answer Sheet
+        </Typography>
+      </div>
 
       <Grid container spacing={4}>
         {/* Left-hand side: Answer Sheet */}
         <Grid item xs={12} md={6}>
-          <Paper
-            elevation={10}
-            style={{ backgroundColor: "#1e1e1e" }}
-            className="p-6"
-          >
-            <Typography variant="h6" className="text-blue-400 mb-4">
+          <Paper elevation={10} style={darkThemeStyles.paper} className="p-6">
+            <Typography
+              variant="h6"
+              style={{ color: darkThemeStyles.text.accent }}
+              className="mb-4"
+            >
               Answer Sheet
             </Typography>
             {answerSheetUrl && (
@@ -144,34 +183,38 @@ const EvaluateAnswerSheet = () => {
           </Paper>
         </Grid>
 
-        {/* Right-hand side: Question and Marks Input */}
+       
         <Grid item xs={12} md={6}>
           {marksSubmitted && (
-            <Typography variant="h3" className="text-green-400 mb-4 p-5">
-              Marks Submitted
-            </Typography>
+            <Paper
+              elevation={10}
+              style={darkThemeStyles.paper}
+              className="mb-4 p-4 text-center"
+            >
+              <Typography variant="h5" style={{ color: "#4caf50" }}>
+                Marks Submitted Successfully
+              </Typography>
+            </Paper>
           )}
-          <Paper
-            elevation={10}
-            style={{ backgroundColor: "#1e1e1e" }}
-            className="p-6"
-          >
-            {/* Navigation Arrows */}
+          <Paper elevation={10} style={darkThemeStyles.paper} className="p-6">
             <div className="flex justify-between items-center mb-4">
               <IconButton
                 onClick={handlePreviousQuestion}
                 disabled={currentQuestionIndex === 0}
-                className="text-blue-400"
+                style={{ color: darkThemeStyles.text.accent }}
               >
                 <ArrowBackIosIcon />
               </IconButton>
-              <Typography variant="h6" className="text-blue-400">
+              <Typography
+                variant="h6"
+                style={{ color: darkThemeStyles.text.accent }}
+              >
                 Question {currentQuestionIndex + 1} of {questions.length}
               </Typography>
               <IconButton
                 onClick={handleNextQuestion}
                 disabled={currentQuestionIndex === questions.length - 1}
-                className="text-blue-400"
+                style={{ color: darkThemeStyles.text.accent }}
               >
                 <ArrowForwardIosIcon />
               </IconButton>
@@ -179,9 +222,19 @@ const EvaluateAnswerSheet = () => {
 
             {questions.length > 0 && (
               <>
-                <Typography variant="body1" className="text-white mb-4">
-                  {questions[currentQuestionIndex].questionText}
-                </Typography>
+                <div
+                  className="mb-4"
+                  style={{ color: darkThemeStyles.text.primary }}
+                >
+                  <Typography variant="body1" className="mb-2">
+                    <strong>Question:</strong>{" "}
+                    {questions[currentQuestionIndex].questionText}
+                  </Typography>
+                  <Typography variant="body1">
+                    <strong>Max Marks:</strong>{" "}
+                    {questions[currentQuestionIndex].maxMarks}
+                  </Typography>
+                </div>
 
                 <TextField
                   fullWidth
@@ -190,14 +243,31 @@ const EvaluateAnswerSheet = () => {
                   value={marksArray[currentQuestionIndex]?.obtainMarks || ""}
                   onChange={handleMarkChange}
                   className="mb-4"
-                  disabled={marksSubmitted} // Disable input after submission
+                  disabled={marksSubmitted}
+                  sx={darkThemeStyles.textField}
+                  slotProps={{
+                    input: {
+                      min: 0,
+                      max: questions[currentQuestionIndex]?.maxMarks,
+                    },
+                  }}
+                  error={
+                    marksArray[currentQuestionIndex]?.obtainMarks >
+                    questions[currentQuestionIndex]?.maxMarks
+                  }
+                  helperText={
+                    marksArray[currentQuestionIndex]?.obtainMarks >
+                    questions[currentQuestionIndex]?.maxMarks
+                      ? `Marks cannot exceed ${questions[currentQuestionIndex]?.maxMarks}`
+                      : ""
+                  }
                 />
 
                 {!marksSubmitted &&
                   currentQuestionIndex === questions.length - 1 && (
                     <Button
                       variant="contained"
-                      color="secondary"
+                      style={darkThemeStyles.submitButton}
                       onClick={handleSubmitMarks}
                       className="w-full"
                     >

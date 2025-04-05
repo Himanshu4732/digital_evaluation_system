@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Grid, Paper, Typography, Button, MenuItem, FormControl, InputLabel, Select, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { 
+  Grid, 
+  Paper, 
+  Typography, 
+  Button, 
+  FormControl, 
+  InputLabel, 
+  Select, 
+  MenuItem, 
+  List, 
+  ListItem, 
+  ListItemText, 
+  Divider,
+  CircularProgress,
+  Box
+} from "@mui/material";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Navbar from "../components/Navbar";
 
 const StudentDashboard = () => {
@@ -9,7 +25,60 @@ const StudentDashboard = () => {
   const [selectedExam, setSelectedExam] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [examLoading, setExamLoading] = useState(true);
   const navigate = useNavigate();
+
+  const darkThemeStyles = {
+    paper: {
+      backgroundColor: "#1e1e1e",
+      color: "white",
+      height: "100%"
+    },
+    button: {
+      color: "white",
+      backgroundColor: "#1976d2",
+      "&:hover": {
+        backgroundColor: "#1565c0",
+      },
+    },
+    select: {
+      color: "white",
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "rgba(255, 255, 255, 0.23)",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: "rgba(255, 255, 255, 0.5)",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#1976d2",
+      }
+    },
+    listItem: {
+      "&:hover": {
+        backgroundColor: "rgba(255, 255, 255, 0.08)",
+      }
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "#b0b0b0",
+      accent: "#64b5f6",
+    }
+    ,menuPaper: {
+      backgroundColor: "#1e1e1e",
+      color: "white",
+      "& .MuiMenuItem-root": {
+        "&:hover": {
+          backgroundColor: "rgba(255, 255, 255, 0.58)",
+        },
+        "&.Mui-selected": {
+          backgroundColor: "rgba(25, 118, 210, 0.56)",
+        },
+        "&.Mui-selected:hover": {
+          backgroundColor: "rgba(25, 118, 210, 0.64)",
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -23,6 +92,8 @@ const StudentDashboard = () => {
         setExams(response.data);
       } catch (error) {
         console.error("Error fetching exams:", error);
+      } finally {
+        setExamLoading(false);
       }
     };
     fetchExams();
@@ -30,6 +101,8 @@ const StudentDashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!selectedExam) return;
+    
     setLoading(true);
     try {
       const response = await axios.get(
@@ -54,29 +127,40 @@ const StudentDashboard = () => {
   };
 
   return (
-    <div className="bg-zinc-800 w-full h-screen text-white overflow-y-auto">
+    <div className="bg-zinc-800 min-h-screen text-white">
       <Navbar />
-      <div className="dashboard-container p-8 pb-4 py-40">
-        <Grid container spacing={3} columns={12}>
-          <Grid item xs={12} md={4}>
-            <Paper elevation={10} className="p-4" style={{ backgroundColor: "rgb(50,50,50)" }}>
-              <Typography variant="h6" className="text-blue-500 uppercase font-semibold mb-4">
+      <div className="p-8 pt-24">
+
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={5}>
+            <Paper elevation={10} style={darkThemeStyles.paper} className="p-6">
+              <Typography variant="h6" className="mb-4" style={{ color: darkThemeStyles.text.accent }}>
                 Select Exam
               </Typography>
               <form onSubmit={handleSubmit}>
                 <FormControl fullWidth className="mb-4">
-                  <InputLabel className="text-white">Exam</InputLabel>
+                  <InputLabel style={{ color: darkThemeStyles.text.secondary }}>Exam</InputLabel>
                   <Select
                     value={selectedExam}
                     onChange={(e) => setSelectedExam(e.target.value)}
-                    className="text-white"
-                    required
+                    style={darkThemeStyles.select}
+                    label="Exam"
+                    disabled={examLoading}
+                    MenuProps={{
+                      PaperProps: {
+                        style: darkThemeStyles.menuPaper
+                      }
+                    }}
                   >
                     <MenuItem value="">
-                      <em className="text-gray-400">Select an exam</em>
+                      <em style={{ color: darkThemeStyles.text.secondary }}>Select an exam</em>
                     </MenuItem>
                     {exams.map((exam) => (
-                      <MenuItem key={exam._id} value={exam._id} className="text-white">
+                      <MenuItem 
+                        key={exam._id} 
+                        value={exam._id} 
+                        style={{ color: darkThemeStyles.text.primary }}
+                      >
                         {exam.name}
                       </MenuItem>
                     ))}
@@ -85,25 +169,43 @@ const StudentDashboard = () => {
                 <Button
                   type="submit"
                   variant="contained"
-                  className="bg-blue-600 hover:bg-blue-700 w-full"
-                  disabled={loading}
+                  style={darkThemeStyles.button}
+                  className="w-full"
+                  disabled={loading || !selectedExam}
+                  startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
                 >
-                  {loading ? "Loading..." : "Get Data"}
+                  {loading ? "Loading Subjects" : "View Subjects"}
                 </Button>
               </form>
             </Paper>
           </Grid>
 
-          <Grid item xs={12} md={8}>
-            <Paper elevation={10} className="p-4" style={{ backgroundColor: "rgb(50,50,50)" }}>
-              <Typography variant="h6" className="text-blue-500 uppercase font-semibold mb-4">
-                Subjects
-              </Typography>
+          <Grid item xs={12} md={7}>
+            <Paper elevation={10} style={darkThemeStyles.paper} className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <Typography variant="h6" style={{ color: darkThemeStyles.text.accent }}>
+                  Available Subjects
+                </Typography>
+                {selectedExam && (
+                  <Typography variant="caption" style={{ color: darkThemeStyles.text.secondary }}>
+                    {subjects.length} subject(s) found
+                  </Typography>
+                )}
+              </div>
+
               {loading ? (
-                <Typography className="text-gray-400">Loading...</Typography>
+                <Box display="flex" justifyContent="center" py={4}>
+                  <CircularProgress style={{ color: darkThemeStyles.text.accent }} />
+                </Box>
               ) : subjects.length === 0 ? (
-                <Typography className="text-gray-400">
-                  No subjects available. Please select an exam.
+                <Typography 
+                  variant="body1" 
+                  className="text-center py-8" 
+                  style={{ color: darkThemeStyles.text.secondary }}
+                >
+                  {selectedExam 
+                    ? "No subjects available for this exam" 
+                    : "Please select an exam to view subjects"}
                 </Typography>
               ) : (
                 <List>
@@ -112,14 +214,23 @@ const StudentDashboard = () => {
                       <ListItem
                         button
                         onClick={() => handleSubjectClick(subject._id)}
-                        className="hover:bg-zinc-700"
+                        style={darkThemeStyles.listItem}
                       >
                         <ListItemText
-                          primary={<span className="text-white">{subject.subject.subjectName}</span>}
-                          secondary={<span className="text-gray-400">{subject.status || "No description"}</span>}
+                          primary={
+                            <Typography style={{ color: darkThemeStyles.text.primary }}>
+                              {subject.subject.subjectName}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography style={{ color: darkThemeStyles.text.secondary }}>
+                              Status: {subject.status || "Not attempted"}
+                            </Typography>
+                          }
                         />
+                        <ArrowForwardIcon style={{ color: darkThemeStyles.text.secondary }} />
                       </ListItem>
-                      <Divider className="bg-gray-600" />
+                      <Divider style={{ backgroundColor: "rgba(255, 255, 255, 0.12)" }} />
                     </React.Fragment>
                   ))}
                 </List>

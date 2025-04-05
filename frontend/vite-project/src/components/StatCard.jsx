@@ -8,10 +8,12 @@ const StatCard = ({ data }) => {
     { title: 'Total Answer Papers', value: data.totalAnswerPapers, color: '#10b981' },
     { title: 'Total Question Papers', value: data.totalQuestionPapers, color: '#8b5cf6' },
     { title: 'Total Feedbacks', value: data.totalFeedbacks, color: '#ef4444' },
+    { title: 'Total Exams', value: data.totalExams, color: '#eab308' },
+    
   ];
 
   return (
-    <Grid2 container spacing={2} className="mb-6" columns={13}>
+    <Grid2 container spacing={2} className="mb-6" columns={12}>
       {stats.map((stat, index) => (
         <Grid2 item xs={12} md={4} key={index} size={4}>
           <motion.div

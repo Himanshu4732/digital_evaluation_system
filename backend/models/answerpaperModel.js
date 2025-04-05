@@ -39,8 +39,8 @@ const answerpaperSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Assigned', "Pending" , 'Evaluated'],
-        default: 'Assigned'
+        enum: ['Not_Assigned', "Pending" , 'Evaluated','Under_Review'],
+        default: 'Not_Assigned'
     },
     answerSheet: {
         type: String,
