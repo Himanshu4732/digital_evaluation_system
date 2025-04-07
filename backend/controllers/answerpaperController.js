@@ -194,7 +194,12 @@ exports.getAllAnswerPapers = async (req, res) => {
 exports.getPaper = async (req, res) => {
   const id = req.params.answerSheetId;
   try {
-    const paper = await answerpaperModel.findById(id).populate("subject").populate("exam").populate("student").populate("teacher").populate("marks");
+    const paper = await answerpaperModel.findById(id).populate("subject").populate("exam").populate("student").populate("teacher").populate(
+      {
+        path: "marks",
+      populate: { path: "questionId" }
+      }
+    );
     if (!paper) {
       return res.status(404).json({ message: "Paper not found" });
     }

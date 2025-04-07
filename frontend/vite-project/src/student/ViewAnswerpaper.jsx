@@ -66,7 +66,7 @@ const ViewAnswerpaper = () => {
             },
           }
         );
-
+        
         setAnswerSheetUrl(response.data.answerSheet);
         const initialMarks = response.data.marks || [];
         setMarks(initialMarks);
@@ -188,11 +188,15 @@ const ViewAnswerpaper = () => {
                   {marks.length > 0 ? (
                     marks.map((mark, index) => (
                       <TableRow key={index} style={darkThemeStyles.tableRow}>
-                        <TableCell style={{ color: darkThemeStyles.text.primary }}>
-                          {mark.questionNumber || `Q${index + 1}`}
+                        <TableCell style={{ color: darkThemeStyles.text.primary ,
+                          width: "60%",
+                          height:"auto",
+                        }}>
+                          Q{mark.questionId.questionNumber }&#160;
+                          { mark.questionId.questionText}
                         </TableCell>
                         <TableCell align="right" style={{ color: darkThemeStyles.text.primary }}>
-                          {mark.maxMarks}
+                          {mark.questionId.maxMarks || "-"}
                         </TableCell>
                         <TableCell align="right" style={{ color: darkThemeStyles.text.primary }}>
                           {mark.marksObtained || "-"}
