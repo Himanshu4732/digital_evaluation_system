@@ -8,7 +8,7 @@ exports.createQuestion = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { questionNumber, questionText, maxMarks, QuestionpaperId } = req.body;
+    const { questionNumber, questionText, maxMarks, QuestionpaperId , part } = req.body;
 
     try {
         const questionPaper = await QuestionPaper.findById(QuestionpaperId);
@@ -20,6 +20,7 @@ exports.createQuestion = async (req, res) => {
             questionNumber,
             questionText,
             maxMarks,
+            part,
             QuestionpaperId
         });
 

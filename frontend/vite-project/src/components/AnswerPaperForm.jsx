@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Autocomplete } from "@mui/material";
 import axios from "axios";
 
-const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
+const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers = () => {} }) => {
   const [formData, setFormData] = useState({
     subject: "",
     exam: "",
@@ -57,15 +57,17 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers }) => {
       formDataToSend.append("total_marks", formData.total_marks);
       formDataToSend.append("answerSheet", formData.answerSheet);
 
-      const response = await axios.post("http://localhost:8000/answerpaper/create", formDataToSend, {
+      await axios.post("http://localhost:8000/answerpaper/create", formDataToSend, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",
         },
       });
-
-      fetchAnswerPapers();
+      
+      if (typeof fetchAnswerPapers === 'function') {
+        fetchAnswerPapers();
+      }
       handleClose();
     } catch (error) {
       console.error("Error creating answer paper", error);

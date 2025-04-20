@@ -15,6 +15,10 @@ const questionSchema = new Schema({
         type: Number,
         required: true
     },
+    part: {
+        type: String,
+        required: true
+    },
     QuestionpaperId: {
         type: Schema.Types.ObjectId,
         ref: 'QuestionPaper',

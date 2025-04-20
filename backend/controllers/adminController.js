@@ -105,7 +105,7 @@ module.exports.getDashboard = async (req, res, next) => {
     
     const answerPapers = await answerPaperModel.find();
     const answerPapersStatus = {
-        'Assigned': 0,
+        'Not_Assigned': 0,
         'Pending': 0,
         'Evaluated': 0
     };

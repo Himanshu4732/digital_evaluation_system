@@ -11,7 +11,9 @@ router.post(
         body('questionNumber').isInt().withMessage('Question number must be an integer'),
         body('questionText').notEmpty().withMessage('Question text is required'),
         body('maxMarks').isInt().withMessage('Max marks must be an integer'),
-        body('QuestionpaperId').isMongoId().withMessage('Invalid Question Paper ID')
+        body('QuestionpaperId').isMongoId().withMessage('Invalid Question Paper ID'),
+        body('part').notEmpty().withMessage('Part is required')
+
     ],
     questionController.createQuestion
 )
