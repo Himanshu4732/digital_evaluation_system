@@ -12,7 +12,7 @@ const CheckedPaper = () => {
 
   const fetchEvaluatedPapers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/teacher/checkedPaper", {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/teacher/checkedPaper `, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

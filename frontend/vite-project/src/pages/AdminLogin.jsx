@@ -18,7 +18,7 @@ const AdminLogin = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/admin/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/admin/login`,
         { email, password }
       );
 

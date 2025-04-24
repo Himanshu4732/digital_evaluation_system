@@ -58,7 +58,7 @@ const ViewAnswerpaper = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/answerpaper/${answerSheetId}`,
+          `${import.meta.env.VITE_BACKEND_URL}/answerpaper/${answerSheetId}`,
           {
             withCredentials: true,
             headers: {

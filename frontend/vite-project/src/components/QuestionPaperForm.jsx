@@ -16,7 +16,7 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
   useEffect(() => {
     const fetchSubjectsAndExams = async () => {
       try {
-        const subjectsResponse = await axios.get("http://localhost:8000/subject/all", {
+        const subjectsResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/subject/all`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -24,7 +24,7 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
         });
         setSubjects(subjectsResponse.data);
 
-        const examsResponse = await axios.get("http://localhost:8000/exam/all", {
+        const examsResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/exam/all`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -45,7 +45,7 @@ const QuestionPaperForm = ({ open, handleClose, fetchQuestionPapers }) => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:8000/questionPaper/create", formData, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/questionPaper/create`, formData, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -66,7 +66,7 @@ const TeacherDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/teacher/dashboard",
+          `${import.meta.env.VITE_BACKEND_URL}/teacher/dashboard`,
           {
             withCredentials: true,
             headers: {

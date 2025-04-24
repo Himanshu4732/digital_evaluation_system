@@ -28,7 +28,7 @@ const UpdateMarks = () => {
     const fetchAnswerSheetAndQuestions = async () => {
       try {
         const answerSheetResponse = await axios.get(
-          `http://localhost:8000/answerpaper/${answerSheetId}`,
+          `${import.meta.env.VITE_BACKEND_URL}/answerpaper/${answerSheetId}`,
           {
             withCredentials: true,
             headers: {
@@ -50,7 +50,7 @@ const UpdateMarks = () => {
         }
     
         const questionsResponse = await axios.get(
-          `http://localhost:8000/questionPaper/${qPaperId}`,
+          `${import.meta.env.VITE_BACKEND_URL}/questionPaper/${qPaperId}`,
           {
             withCredentials: true,
             headers: {
@@ -126,7 +126,7 @@ const UpdateMarks = () => {
   const handleUpdateMarks = async () => {
     try {
       await axios.patch(
-        `http://localhost:8000/answerpaper/update-marks`,
+        `${import.meta.env.VITE_BACKEND_URL}/answerpaper/update-marks`,
         { updatedMarks },
         {
           withCredentials: true,

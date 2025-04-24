@@ -28,7 +28,7 @@ const EvaluateAnswerSheet = () => {
       const fetchAnswerSheetAndQuestions = async () => {
         try {
           const answerSheetResponse = await axios.get(
-            `http://localhost:8000/answerpaper/${answerSheetId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/answerpaper/${answerSheetId}`,
             {
               withCredentials: true,
               headers: {
@@ -48,7 +48,7 @@ const EvaluateAnswerSheet = () => {
       
     
           const questionsResponse = await axios.get(
-            `http://localhost:8000/questionPaper/${questionPaperId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/questionPaper/${questionPaperId}`,
             {
               withCredentials: true,
               headers: {
@@ -90,7 +90,7 @@ const EvaluateAnswerSheet = () => {
   const handleSubmitMarks = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/answerpaper/check/${answerSheetId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/answerpaper/check/${answerSheetId}`,
         { marksArray },
         {
           withCredentials: true,

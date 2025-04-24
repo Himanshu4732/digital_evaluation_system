@@ -19,7 +19,7 @@ const AdminExamsPage = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/exam/all", {
+        const response = await axios.get("/exam/all", {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -67,7 +67,7 @@ const AdminExamsPage = () => {
   const handleAddExam = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/exam/add",
+        `${import.meta.env.VITE_BACKEND_URL}/exam/add`,
         newExam,
         {
           withCredentials: true,
@@ -86,7 +86,7 @@ const AdminExamsPage = () => {
   // Handle delete exam
   const handleDeleteExam = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/exam/delete/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/exam/delete/${id}`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

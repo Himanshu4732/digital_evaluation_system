@@ -17,7 +17,7 @@ const StudentLogin = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/student/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/student/login`,
         { email, password }
       );
 

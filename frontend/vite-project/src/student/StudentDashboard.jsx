@@ -83,7 +83,7 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/exam/all", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/exam/all`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -106,7 +106,7 @@ const StudentDashboard = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8000/exam/data/${selectedExam}`,
+        `${import.meta.env.VITE_BACKEND_URL}/exam/data/${selectedExam}`,
         {
           withCredentials: true,
           headers: {
