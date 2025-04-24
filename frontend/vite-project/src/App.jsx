@@ -25,7 +25,7 @@ import PendingPaper from "./teacher/PendingPaper";
 import CheckedPaper from "./teacher/CheckedPapers";
 import UpdateMarks from "./teacher/UpdateMarks";
 import AdminContext from "./context/AdminContext"; // Import AdminContext
-import ViewAnswerpaper from "./student/viewAnswerpaper";
+import ViewAnswerpaper from "./student/ViewAnswerpaper";
 
 function App() {
   return (
