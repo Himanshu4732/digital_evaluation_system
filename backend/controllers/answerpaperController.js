@@ -5,6 +5,7 @@ const teacherModel = require("../models/teacherModel");
 const marksModel = require("../models/marksModel");
 const examModel = require("../models/examModel");
 const subjectModel = require("../models/subjectModel");
+const questionPaperModel = require("../models/questionPaperModel");
 
 exports.createAnswerPaper = async (req, res) => {
   const errors = validationResult(req);
@@ -16,48 +17,58 @@ exports.createAnswerPaper = async (req, res) => {
 
   try {
     const studentDetail = await studentModel.findOne({ email: studentEmail });
-
     if (!studentDetail) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    const examId = await examModel.findOne({ name: exam });
-
-    if (!examId) {
+    const examData = await examModel.findOne({ name: exam });
+    if (!examData) {
       return res.status(404).json({ message: "Exam not found" });
     }
 
-    const subjectId = await subjectModel.findOne({ subjectName: subject });
-
-    if (!subjectId) {
+    const subjectData = await subjectModel.findOne({ subjectName: subject });
+    if (!subjectData) {
       return res.status(404).json({ message: "Subject not found" });
     }
 
     const pdf = req.file;
-
     if (!pdf) {
       return res.status(400).json({ message: "PDF file is required" });
     }
 
     const answerSheetUrl = pdf.location; // S3 URL
 
+    // 🔍 Find the matching question paper
+    const questionPaper = await questionPaperModel.findOne({
+      exam: examData._id,
+      subject: subjectData._id
+    });
+
+    if (!questionPaper) {
+      return res.status(404).json({ message: "Question paper not found for the given exam and subject" });
+    }
+
     const newPaper = new answerpaperModel({
-      subject: subjectId._id,
-      exam: examId._id,
+      subject: subjectData._id,
+      exam: examData._id,
       student: studentDetail._id,
       total_marks,
       answerSheet: answerSheetUrl,
+      questionPaper: questionPaper._id 
     });
 
     await newPaper.save();
+
     studentDetail.answerpapers.push(newPaper._id);
     await studentDetail.save();
+
     res.status(201).json({ message: "Paper created successfully", paper: newPaper });
   } catch (error) {
-    console.error("Error in createAnswerPaper:", error); // Log the error
+    console.error("Error in createAnswerPaper:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 exports.assignanswerPaper = async (req, res) => {
   const errors = validationResult(req);
@@ -194,7 +205,7 @@ exports.getAllAnswerPapers = async (req, res) => {
 exports.getPaper = async (req, res) => {
   const id = req.params.answerSheetId;
   try {
-    const paper = await answerpaperModel.findById(id).populate("subject").populate("exam").populate("student").populate("teacher").populate(
+    const paper = await answerpaperModel.findById(id).populate(
       {
         path: "marks",
       populate: { path: "questionId" }

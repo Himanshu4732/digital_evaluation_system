@@ -21,45 +21,51 @@ const EvaluateAnswerSheet = () => {
   const [answerSheetUrl, setAnswerSheetUrl] = useState("");
   const [marksSubmitted, setMarksSubmitted] = useState(false);
   const navigate = useNavigate();
+  const [questionPaperId, setQuestionPaperId] = useState(null);
 
-  useEffect(() => {
-    const fetchAnswerSheetAndQuestions = async () => {
-      try {
-        const answerSheetResponse = await axios.get(
-          `http://localhost:8000/answerpaper/${answerSheetId}`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+
+    useEffect(() => {
+      const fetchAnswerSheetAndQuestions = async () => {
+        try {
+          const answerSheetResponse = await axios.get(
+            `http://localhost:8000/answerpaper/${answerSheetId}`,
+            {
+              withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+    
+          setAnswerSheetUrl(answerSheetResponse.data.answerSheet);
+          if (answerSheetResponse.data.status === "Evaluated") {
+            setMarksSubmitted(true);
+            setMarksArray(answerSheetResponse.data.marksArray || []);
           }
-        );
 
-        setAnswerSheetUrl(answerSheetResponse.data.answerSheet);
-        if (answerSheetResponse.data.status === "Evaluated") {
-          setMarksSubmitted(true);
-          setMarksArray(answerSheetResponse.data.marksArray || []);
+          const questionPaperId = answerSheetResponse.data.questionPaper
+    
+      
+    
+          const questionsResponse = await axios.get(
+            `http://localhost:8000/questionPaper/${questionPaperId}`,
+            {
+              withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+    
+          setQuestions(questionsResponse.data.questions);
+        } catch (error) {
+          console.error("Error fetching answer sheet or questions:", error);
         }
-
-        const questionsResponse = await axios.get(
-          `http://localhost:8000/questionPaper/67e4e98b329cc4d6a88cd87e`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        setQuestions(questionsResponse.data.questions);
-      } catch (error) {
-        console.error("Error fetching answer sheet or questions:", error);
-      }
-    };
-
-    fetchAnswerSheetAndQuestions();
-  }, [answerSheetId]);
-
+      };
+    
+      fetchAnswerSheetAndQuestions();
+    }, [answerSheetId]);
+    
   const handleMarkChange = (event) => {
     const newMarksArray = [...marksArray];
     newMarksArray[currentQuestionIndex] = {

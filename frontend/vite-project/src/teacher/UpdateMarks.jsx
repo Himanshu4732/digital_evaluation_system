@@ -22,6 +22,7 @@ const UpdateMarks = () => {
   const [answerSheetUrl, setAnswerSheetUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [updatedMarks, setUpdatedMarks] = useState([]);
+  const [questionPaperId, setQuestionPaperId] = useState("");
 
   useEffect(() => {
     const fetchAnswerSheetAndQuestions = async () => {
@@ -35,12 +36,21 @@ const UpdateMarks = () => {
             },
           }
         );
-
+    
         setAnswerSheetUrl(answerSheetResponse.data.answerSheet);
         setMarksArray(answerSheetResponse.data.marks || []);
-
+    
+        const qPaperId = answerSheetResponse.data.questionPaper;
+        setQuestionPaperId(qPaperId);
+    
+        if (!qPaperId) {
+          console.error("Question Paper ID not found in marks data");
+          setIsLoading(false);
+          return;
+        }
+    
         const questionsResponse = await axios.get(
-          `http://localhost:8000/questionPaper/67e4e98b329cc4d6a88cd87e`,
+          `http://localhost:8000/questionPaper/${qPaperId}`,
           {
             withCredentials: true,
             headers: {
@@ -48,7 +58,7 @@ const UpdateMarks = () => {
             },
           }
         );
-
+    
         setQuestions(questionsResponse.data.questions);
         setIsLoading(false);
       } catch (error) {
@@ -56,10 +66,11 @@ const UpdateMarks = () => {
         setIsLoading(false);
       }
     };
+    
 
     fetchAnswerSheetAndQuestions();
   }, [answerSheetId]);
-
+  console.log(questionPaperId)
   const handleMarkChange = (event) => {
     const value = parseInt(event.target.value, 10);
     const maxMarks = questions[currentQuestionIndex]?.maxMarks || 0;
