@@ -14,7 +14,7 @@ const AllQuestionPaper = () => {
 
   const fetchQuestionPapers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/questionPaper/all", {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/questionPaper/all`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -45,7 +45,7 @@ const AllQuestionPaper = () => {
 
   const handleDeleteQuestionPaper = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/admin/question-papers/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/admin/question-papers/${id}`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

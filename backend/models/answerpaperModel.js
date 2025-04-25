@@ -26,8 +26,12 @@ const answerpaperSchema = new mongoose.Schema({
         ref: 'Marks'
     }
     ],
-    
-    elavuation_date: {
+    questionPaper: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "questionPaper"
+      }
+,
+   elavuation_date: {
         type: Date
     },
     assigned_date: {

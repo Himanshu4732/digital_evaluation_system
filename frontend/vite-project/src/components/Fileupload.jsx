@@ -23,7 +23,7 @@ const Fileupload = ({ fetchQuestionPapers }) => {
       <QuestionPaperForm
         open={openForm}
         handleClose={handleCloseForm}
-        fetchQuestionPapers={fetchQuestionPapers}
+        fetchQuestionPapers={() => {}}
       />
     </Paper>
   );

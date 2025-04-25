@@ -16,7 +16,7 @@ const AdminDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/admin/dashboard",
+          "/admin/dashboard",
           {
             withCredentials: true,
             headers: {

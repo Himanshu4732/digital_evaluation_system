@@ -26,7 +26,7 @@ const AdminSignup = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/admin/register",
+        `${import.meta.env.VITE_BACKEND_URL}/admin/register`,
         formData,
         {
           headers: {

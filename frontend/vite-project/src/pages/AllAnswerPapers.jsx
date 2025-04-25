@@ -43,7 +43,7 @@ const AllAnswerPapers = () => {
 
   const fetchAnswerPapers = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/answerpaper/allAnswerPaper", {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/answerpaper/allAnswerPaper`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -70,7 +70,7 @@ const AllAnswerPapers = () => {
 
   const handleDeleteAnswerPaper = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/answerpaper/delete/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/answerpaper/delete/${id}`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -87,7 +87,7 @@ const AllAnswerPapers = () => {
       const papersToAssign = groupedPapers[selectedGroup].filter(paper => !paper.teacherEmail);
       for (const paper of papersToAssign) {
         await axios.patch(
-          `http://localhost:8000/answerpaper/assign/${paper._id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/answerpaper/assign/${paper._id}`,
           { teacherEmail: bulkTeacherEmail },
           {
             withCredentials: true,
@@ -111,7 +111,7 @@ const AllAnswerPapers = () => {
     if (!selectedPaper || !singleTeacherEmail) return;
     try {
       await axios.patch(
-        `http://localhost:8000/answerpaper/assign/${selectedPaper._id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/answerpaper/assign/${selectedPaper._id}`,
         { teacherEmail: singleTeacherEmail },
         {
           withCredentials: true,

@@ -17,7 +17,7 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers = () => {} }) =>
   useEffect(() => {
     const fetchSubjectsAndExams = async () => {
       try {
-        const subjectsResponse = await axios.get("http://localhost:8000/subject/all", {
+        const subjectsResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/subject/all`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -25,7 +25,7 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers = () => {} }) =>
         });
         setSubjects(subjectsResponse.data);
 
-        const examsResponse = await axios.get("http://localhost:8000/exam/all", {
+        const examsResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/exam/all`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -57,7 +57,7 @@ const AnswerPaperForm = ({ open, handleClose, fetchAnswerPapers = () => {} }) =>
       formDataToSend.append("total_marks", formData.total_marks);
       formDataToSend.append("answerSheet", formData.answerSheet);
 
-      await axios.post("http://localhost:8000/answerpaper/create", formDataToSend, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/answerpaper/create`, formDataToSend, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

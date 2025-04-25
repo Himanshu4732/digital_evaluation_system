@@ -19,7 +19,7 @@ const QuestionPaperDetail = () => {
 
   const fetchQuestionPaper = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/questionPaper/${id}`, {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/questionPaper/${id}`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -43,7 +43,7 @@ const QuestionPaperDetail = () => {
   const handleAddQuestion = async () => {
     try {
       await axios.post(
-        `http://localhost:8000/question/create`,
+        `${import.meta.env.VITE_BACKEND_URL}/question/create`,
         newQuestion,
         {
           withCredentials: true,
@@ -67,7 +67,7 @@ const QuestionPaperDetail = () => {
 
   const handleDeleteQuestion = async (questionId) => {
     try {
-      await axios.delete(`http://localhost:8000/question/delete/${questionId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/question/delete/${questionId}`, {
         withCredentials: true,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -18,7 +18,7 @@ const Navbar = () => {
           </Link>
         </li>
         <Typography variant="h3" className="text-center mb-4 text-blue-400">
-          Admin Dashboard
+          Dashboard
         </Typography>
         <li className="flex justify-center items-center gap-4 p-4">
           <div>
