@@ -22,10 +22,11 @@ import AllAnswerPapers from "./pages/AllAnswerPapers";
 import AssignedPapers from "./teacher/AssignedPapers";
 import EvaluatePaper from "./teacher/EvaluatePaper";
 import PendingPaper from "./teacher/PendingPaper";
+import ViewAnswerpaper from "./pages/ViewAnswerpaper";
 import CheckedPaper from "./teacher/CheckedPapers";
 import UpdateMarks from "./teacher/UpdateMarks";
 import AdminContext from "./context/AdminContext"; // Import AdminContext
-import ViewAnswerpaper from "./student/viewAnswerpaper";
+
 
 function App() {
   return (
