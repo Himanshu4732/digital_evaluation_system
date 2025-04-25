@@ -26,7 +26,7 @@ import ViewAnswerpaper from "./pages/ViewAnswerpaper";
 import CheckedPaper from "./teacher/CheckedPapers";
 import UpdateMarks from "./teacher/UpdateMarks";
 import AdminContext from "./context/AdminContext"; // Import AdminContext
-import ViewAnswerpaper from "./pages/ViewAnswerpaper";
+
 function App() {
   return (
     <AdminContext> {/* Wrap the entire application with AdminContext */}
