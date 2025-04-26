@@ -18,7 +18,7 @@ const subjectRoute = require('./routes/subjectRoute.js')
 connectToDb();
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: "https://digital-evaluation-system-8666.vercel.app",
     credentials: true
 }));
 app.use(express.json());
