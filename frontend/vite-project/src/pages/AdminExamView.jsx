@@ -19,7 +19,7 @@ const AdminExamsPage = () => {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await axios.get("/exam/all", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/exam/all`, {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

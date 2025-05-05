@@ -16,7 +16,7 @@ const AdminDashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const response = await axios.get(
-          "/admin/dashboard",
+          `${import.meta.env.VITE_BACKEND_URL}/admin/dashboard`,
           {
             withCredentials: true,
             headers: {

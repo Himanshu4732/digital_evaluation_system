@@ -28,7 +28,7 @@ const TeacherSignup = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/teacher/register',
+        `${import.meta.env.VITE_BACKEND_URL}/teacher/register`,
         formData,
         {
           headers: {
