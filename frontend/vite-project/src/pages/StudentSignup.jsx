@@ -32,7 +32,7 @@ const StudentSignup = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/student/register', 
+        `${import.meta.env.VITE_BACKEND_URL}/student/register`, 
         formData,
         {
           headers: {
